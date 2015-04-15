@@ -100,6 +100,7 @@ define([
         setupMenu: function(menuView) {
             var menuModel = menuView.model;
             if (menuModel.get("_parentId")) return this.setLocationID(menuModel.get("_id"));
+            else this.resetLocationID();
         },
         
         setupPage: function (pageView) {
