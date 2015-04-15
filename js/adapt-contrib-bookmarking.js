@@ -77,7 +77,15 @@ define([
 
         navigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
-            Adapt.navigateToElement("." + courseBookmarkModel._locationID);
+            var targetModel = Adapt.findById(courseBookmarkModel._locationID);
+            switch (targetModel.get("_type")) {
+            case "article": case "block": case "component":
+                Adapt.navigateToElement("." + courseBookmarkModel._locationID);
+                break;
+            default:
+                Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
+            }
+            
             this.stopListening(Adapt, "bookmarking:cancel");
         },
 
@@ -91,7 +99,7 @@ define([
 
         setupMenu: function(menuView) {
             var menuModel = menuView.model;
-            if (menuModel.get("parentId")) return this.setLocationID(menuModel.get("_id"));
+            if (menuModel.get("_parentId")) return this.setLocationID(menuModel.get("_id"));
         },
         
         setupPage: function (pageView) {
