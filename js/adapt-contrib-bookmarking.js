@@ -1,7 +1,7 @@
 /*
 * adapt-bookmarking
 * License - https://github.com/cgkineo/adapt-bookmarking/LICENSE
-* Maintainers - Dan Ghost <daniel.ghost@kineo.com>
+* Maintainers - Dan Ghost <daniel.ghost@kineo.com>, Oliver Foster <oliver.foster@kineo.com>
 */
 
 define([
