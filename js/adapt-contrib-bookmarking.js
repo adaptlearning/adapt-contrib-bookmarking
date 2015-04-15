@@ -110,7 +110,6 @@ define([
 
             if (!bookmarkModel._isEnabled) {
                 this.resetLocationID();
-                return;
             } else if (this.bookmarkLevel === 'page') {
                 this.setLocationID(pageView.model.get('_id'));
             } else {
@@ -122,8 +121,7 @@ define([
 
         addInViewListeners: function (view) {
             var element = view.$el;
-            element.data('locationID', view.model.get('_id'));
-            console.log("View check on", view.model.get('_id'));  
+            element.data('locationID', view.model.get('_id')); 
             element.on('inview', _.bind(this.onInview, this));
             this.inviewEventListeners.push(element);
         },
@@ -185,7 +183,6 @@ define([
         setLocationID: function (id) {
             if (!Adapt.offlineStorage) return;
             Adapt.offlineStorage.set("location", id);
-            console.log("Location set", id);
         },
 
         removeInViewListeners: function () {
