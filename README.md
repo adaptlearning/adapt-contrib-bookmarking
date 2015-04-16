@@ -11,7 +11,7 @@ The main settings are applied to the `course.json` file. From here you set the d
         "_isEnabled": true,
         "_level": "block",
         "title": "Bookmarking",
-        "message": "Whould you like to continue where you left off?",
+        "body": "Would you like to continue where you left off?",
         "_buttons": {
             "yes": "Yes",
             "no": "No"
@@ -25,7 +25,7 @@ A description of the attributes is as follows:
 | _isEnabled  | Boolean   | Set to true to switch bookmarking on
 | _level  | String   | The type of view to return a user to. The possible values are "page", "block" or "component". The "_id" of the most recent view to trigger 'inview' will be used
 | title  | String   | The title to appear on the dialog
-| message  | String   | The message to explain the dialog options
+| body  | String   | The message to explain the dialog options
 | _buttons    | Object   | The labels for the button options
 
 The default values for whether bookmarking is on/off and the level of bookmarking can be overriden for each contentObject of "_type": "page" within the `contentObjects.json` file . For example:
