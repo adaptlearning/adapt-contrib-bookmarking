@@ -86,7 +86,6 @@ define([
 
         navigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
-            var targetModel = Adapt.findById(courseBookmarkModel._locationID);
             
             _.defer(function() {
                 Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
