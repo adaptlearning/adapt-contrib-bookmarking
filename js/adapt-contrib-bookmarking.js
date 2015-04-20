@@ -87,13 +87,7 @@ define([
         navigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
             var targetModel = Adapt.findById(courseBookmarkModel._locationID);
-            switch (targetModel.get("_type")) {
-            case "article": case "block": case "component":
-                Adapt.navigateToElement("." + courseBookmarkModel._locationID);
-                break;
-            default:
-                Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
-            }
+            Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
             
             this.stopListening(Adapt, "bookmarking:cancel");
         },
