@@ -87,7 +87,10 @@ define([
         navigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
             var targetModel = Adapt.findById(courseBookmarkModel._locationID);
-            Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
+            
+            _.defer(function() {
+                Backbone.history.navigate('#/id/' + courseBookmarkModel._locationID, {trigger: true});    
+            });
             
             this.stopListening(Adapt, "bookmarking:cancel");
         },
