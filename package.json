@@ -1,6 +1,7 @@
 {
   "name": "adapt-contrib-bookmarking",
   "version": "2.0.0",
+  "framework": "^2.0.0",
   "description": "A bookmarking dialog",
   "main": "",
   "repository": {
