@@ -13,6 +13,7 @@ define([
         bookmarkLevel: null,
         currentInviews: [],
         inviewEventListeners: [],
+        locationID: null,
 
         initialize: function () {
             this.listenToOnce(Adapt, "router:location", this.onAdaptInitialize);
@@ -38,16 +39,21 @@ define([
         },
 
         checkRestoreLocation: function() {
-            var locationID = Adapt.offlineStorage.get("location");
+            this.locationID = Adapt.offlineStorage.get("location");
 
-            switch (locationID) {
-            case 'undefined': case '': case undefined:
-                return;
-            }
+            if (!this.locationID) return;
 
-            var courseBookmarkModel = Adapt.course.get('_bookmarking');
-            courseBookmarkModel._locationID = locationID;
-            this.showPrompt();
+            this.listenToOnce(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
+        },
+
+        restoreLocation: function() {
+            _.defer(_.bind(function() {
+                this.stopListening();
+
+                var courseBookmarkModel = Adapt.course.get('_bookmarking');
+                courseBookmarkModel._locationID = this.locationID;
+                this.showPrompt();
+            }, this));
         },
 
         showPrompt: function() {
