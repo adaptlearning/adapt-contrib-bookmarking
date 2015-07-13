@@ -52,6 +52,13 @@ define([
 
                 var courseBookmarkModel = Adapt.course.get('_bookmarking');
                 courseBookmarkModel._locationID = this.locationID;
+
+                try {
+                    var model = Adapt.findById(this.locationID);
+                } catch (error) {
+                    return;
+                }
+
                 this.showPrompt();
             }, this));
         },
