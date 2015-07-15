@@ -48,10 +48,12 @@ define([
 
         restoreLocation: function() {
             _.defer(_.bind(function() {
-                this.stopListening();
+                this.stopListening(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
 
                 var courseBookmarkModel = Adapt.course.get('_bookmarking');
                 courseBookmarkModel._locationID = this.locationID;
+
+                if (this.locationID == Adapt.location._currentId) return;
 
                 try {
                     var model = Adapt.findById(this.locationID);
