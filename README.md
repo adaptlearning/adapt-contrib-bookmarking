@@ -4,7 +4,9 @@
 
 <img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/bookmarking01.gif" alt="bookmarking in action">
 
-Upon returning to the course, a prompt inquires whether the learner would like to continue where she or he left off. If the learner indicates "yes", the course navigates to the most recently visited structural element (page, block, or component) based on configuration. **Bookmarking** only works [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system.
+Upon returning to the course, a prompt inquires whether the learner would like to continue where they left off. If the learner selects "yes", the course navigates to the most recently visited structural element (page, block, or component), based on configuration. If the learner selects "no", the course remains at the top-level menu.
+
+This prompt will not appear on first launch or if the user exits from the top-level menu.
 
 [Visit the **Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-bookmarking/wiki) for more information about its functionality and for explanations of key properties. 
 
@@ -27,7 +29,9 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
 
 ## Settings Overview
 
-**Bookmarking** is configured with the attributes that follow. It is configured on two levels of the [content structure](https://github.com/adaptlearning/adapt_framework/wiki/Framework-in-five-minutes#content-structure): course (*course.json*) and contentObject (*contentObjects.json*). The attributes are so grouped below and are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-bookmarking/blob/master/example.json). Visit the [**Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-bookmarking/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki). 
+**Bookmarking** is configured with the attributes that follow. It is configured on two levels of the [content structure](https://github.com/adaptlearning/adapt_framework/wiki/Framework-in-five-minutes#content-structure): course (*course.json*) and contentObject (*contentObjects.json*). The attributes are so grouped below and are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-bookmarking/blob/master/example.json).
+
+Visit the [**Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-bookmarking/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki). 
 
 ### Attributes
 
@@ -65,7 +69,8 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 
 ## Limitations
  
-**Bookmarking** only works [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system. 
+**Bookmarking** only works if [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system (LMS). 
+>**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor/tree/develop#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
 **Version number:**  2.0   <a href="https://community.adaptlearning.org/ target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
