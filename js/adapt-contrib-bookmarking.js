@@ -225,7 +225,6 @@ define([
             if (this.locationID == id) return;
             Adapt.offlineStorage.set("location", id);
             this.locationID = id;
-            console.log("location", id);
         },
 
         removeInViewListeners: function () {
