@@ -5,9 +5,10 @@ define([
     var Bookmarking = _.extend({
 
         bookmarkLevel: null,
-        currentInviews: [],
+        currentOnScreens: [],
         inviewEventListeners: [],
         locationID: null,
+        debounceOnScroll: null,
 
         initialize: function () {
             this.listenToOnce(Adapt, "router:location", this.onAdaptInitialize);
@@ -15,7 +16,7 @@ define([
 
         onAdaptInitialize: function() {
             if (!this.checkIsEnabled()) return;
-            this.setupEventListeners();
+            this.setupPrimaryEventListeners();
             this.checkRestoreLocation();
         },
 
@@ -26,10 +27,12 @@ define([
             return true;
         },
 
-        setupEventListeners: function() {
-            this._onScroll = _.bind(this.onScroll, Bookmarking);
-            this.listenTo(Adapt, 'menuView:ready', this.setupMenu);
-            this.listenTo(Adapt, 'pageView:preRender', this.setupPage);
+        setupPrimaryEventListeners: function() {
+
+            this.debounceOnScroll =_.debounce(_.bind(this.onScroll, Bookmarking), 1000);
+
+            this.listenTo(Adapt, 'menuView:ready', this.onMenuReady);
+            this.listenTo(Adapt, 'pageView:preRender', this.onPagePreRender);
         },
 
         checkRestoreLocation: function() {
@@ -42,6 +45,7 @@ define([
 
         restoreLocation: function() {
             _.defer(_.bind(function() {
+
                 this.stopListening(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
 
                 var courseBookmarkModel = Adapt.course.get('_bookmarking');
@@ -56,6 +60,7 @@ define([
                 }
 
                 this.showPrompt();
+
             }, this));
         },
 
@@ -67,12 +72,16 @@ define([
                     no: "No"
                 };
             }
-            if (!courseBookmarkModel._buttons.yes) courseBookmarkModel._buttons.yes = "Yes";
-            if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = "No";
+            if (!courseBookmarkModel._buttons.yes) {
+                courseBookmarkModel._buttons.yes = "Yes";
+            }
+            if (!courseBookmarkModel._buttons.no) {
+                courseBookmarkModel._buttons.no = "No";
+            }
 
 
-            this.listenToOnce(Adapt, "bookmarking:continue", this.navigateToPrevious);
-            this.listenToOnce(Adapt, "bookmarking:cancel", this.navigateCancel);
+            this.listenToOnce(Adapt, "bookmarking:continue", this.onNavigateToPrevious);
+            this.listenToOnce(Adapt, "bookmarking:cancel", this.onNavigateCancel);
 
             var promptObject = {
                 title: courseBookmarkModel.title,
@@ -93,7 +102,7 @@ define([
             Adapt.trigger('notify:prompt', promptObject);
         },
 
-        navigateToPrevious: function() {
+        onNavigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
             
             _.defer(function() {
@@ -103,32 +112,32 @@ define([
             this.stopListening(Adapt, "bookmarking:cancel");
         },
 
-        navigateCancel: function() {
+        onNavigateCancel: function() {
             this.stopListening(Adapt, "bookmarking:continue");
         },
 
-        resetLocationID: function () {
-            this.setLocationID('');
+        resetLocation: function () {
+            this.saveLocation('');
         },
 
-        setupMenu: function(menuView) {
+        onMenuReady: function(menuView) {
             var menuModel = menuView.model;
-            if (menuModel.get("_parentId")) return this.setLocationID(menuModel.get("_id"));
-            else this.resetLocationID();
+            if (menuModel.get("_parentId")) return this.saveLocation(menuModel.get("_id"));
+            else this.resetLocation();
         },
         
-        setupPage: function (pageView) {
+        onPagePreRender: function (pageView) {
             var hasPageBookmarkObject = pageView.model.has('_bookmarking');
             var bookmarkModel = (hasPageBookmarkObject) ? pageView.model.get('_bookmarking') : Adapt.course.get('_bookmarking');
             this.bookmarkLevel = bookmarkModel._level;
 
             if (!bookmarkModel._isEnabled) {
-                this.resetLocationID();
+                this.resetLocation();
                 return;
             } else if (this.bookmarkLevel === 'page') {
-                this.setLocationID(pageView.model.get('_id'));
+                this.saveLocation(pageView.model.get('_id'));
             } else {
-                $(window).on("scroll", this._onScroll);
+                $(window).on("scroll", this._debounceOnScroll);
                 this.listenTo(Adapt, this.bookmarkLevel + "View:postRender", this.addInViewListeners);
                 this.listenToOnce(Adapt, "remove", this.removeInViewListeners);
             }
@@ -136,75 +145,92 @@ define([
 
         addInViewListeners: function (view) {
             var element = view.$el;
-            element.data('locationID', view.model.get('_id'));
-            element.on('inview', _.bind(this.onInview, this));
+            var id = view.model.get('_id');
+            element.data('locationID', id);
+            element.on('onscreen', _.bind(this.delayOnScreen, this));
             this.inviewEventListeners.push(element);
         },
 
-        onInview: function (event, visible, visiblePartX, visiblePartY) {
-            var id = $(event.currentTarget).data('locationID');
+        delayOnScreen: function(event) {
+            var $target = $(event.target);
 
-            if (visible) {
-                if (_.findWhere(this.currentInviews, { id : id }) ) return;
-                this.currentInviews.push({
-                    id: id,
-                    $target: $(event.currentTarget)
-                });
-            } else {
-                if (!_.findWhere(this.currentInviews, { id : id } )) return;
-                this.currentInviews = _.reject(this.currentInviews, function(item) {
-                    return item.id == id;
-                });
-            }
+            _.delay(_.bind(function(){
+            
+                this.onScreen($target)
 
-            this.sortCurrentInviewItemsByTopOffset();
-            this.setLocationToFirstVisible();
+            },this), 1000);
         },
 
-        sortCurrentInviewItemsByTopOffset: function() {
-            if (this.currentInviews.length === 0) return;
-            
-            for (var i = 0, l = this.currentInviews.length; i < l; i++){
-                var item = this.currentInviews[i];
-                item.top = item.$target.offset()['top'];
+        onScreen: function ($target) {
+            var id = $target.data('locationID');
+
+            this.recheckOnScreens();
+
+            var isInList = _.findWhere(this.currentOnScreens, { id : id } );
+
+            if (!isInList) {
+                var measurements =  $target.onscreen();
+
+                if (measurements.onscreen) {                
+                    this.currentOnScreens.push({
+                        id: id,
+                        $target: $target,
+                        measurements: measurements
+                    });
+                } else {
+                    return;
+                }
+
+            } else {
+
+                if (!isInList.measurements.onscreen) {
+                    this.currentOnScreens = _.reject(this.currentOnScreens, function(item) {
+                        return item.id == id;
+                    });
+                }
             }
 
-            this.currentIndexViews = this.currentInviews.sort(function(item1, item2) {
-                return item1.top - item2.top;
+            this.sortOnScreenItems();
+            this.setLocation();
+        },
+
+        recheckOnScreens: function() {
+            for (var i = 0, l = this.currentOnScreens.length; i < l; i++) {
+                var currentOnScreen = this.currentOnScreens[i];
+                currentOnScreen.measurements = currentOnScreen.$target.onscreen();
+            }
+        },
+
+        sortOnScreenItems: function() {
+            if (this.currentOnScreens.length === 0) return;
+            
+            this.currentIndexViews = this.currentOnScreens.sort(function(item1, item2) {
+                return item2.measurements.percentInview-item1.measurements.percentInview;
             });
         },
 
         onScroll: function() {
+            this.recheckOnScreens();
+            this.sortOnScreenItems();
             this.setLocationToFirstVisible();
         },
 
-        setLocationToFirstVisible: function() {
-            /*  As inview doesn't take into account the navbar
-            *   this code allows only items not entirely hidden by the navbar
-            *   to be bookmarked
-            */
-            if (this.currentInviews.length === 0) return;
-
-            var itemsNotUnderNavBar = _.reject(this.currentInviews, function(item) {
-                var itemViewPortTopOffset = (item.$target.offset()['top'] - $(window).scrollTop());
-                var itemViewPortBottomOffset = itemViewPortTopOffset + item.$target.height();
-                return  itemViewPortBottomOffset < ($('.navigation').height() * 2);
-            });
-            if (itemsNotUnderNavBar.length === 0) return;
-
-            this.setLocationID(itemsNotUnderNavBar[0].id);
+        setLocation: function() {
+            if (this.currentOnScreens.length === 0) this.resetLocation();
+            else this.saveLocation(this.currentOnScreens[0].id);
         },
 
-        setLocationID: function (id) {
+        saveLocation: function (id) {
             if (!Adapt.offlineStorage) return;
+            if (this.locationID == id) return;
             Adapt.offlineStorage.set("location", id);
+            this.locationID = id;
         },
 
         removeInViewListeners: function () {
-            $(this.inviewEventListeners).off('inview');
-            this.currentInviews.length = 0;
+            $(this.inviewEventListeners).off('onscreen');
+            this.currentOnScreens.length = 0;
             this.inviewEventListeners.length = 0;
-            this.stopListening(Adapt, 'remove', this.removeInViewListeners);
             this.stopListening(Adapt, this.bookmarkLevel + 'View:postRender', this.addInViewListeners);
         }
 
