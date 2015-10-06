@@ -217,6 +217,7 @@ define([
 
         setLocation: function() {
             if (this.currentOnScreens.length === 0) this.resetLocation();
+            else if (typeof this.currentOnScreens[0].id == 'undefined') return;
             else this.saveLocation(this.currentOnScreens[0].id);
         },
 
