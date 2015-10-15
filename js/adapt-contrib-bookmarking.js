@@ -5,10 +5,9 @@ define([
     var Bookmarking = _.extend({
 
         bookmarkLevel: null,
-        currentOnScreens: [],
-        inviewEventListeners: [],
+        watchViewIds: null,
+        watchViews: [],
         locationID: null,
-        debounceOnScroll: null,
 
         initialize: function () {
             this.listenToOnce(Adapt, "router:location", this.onAdaptInitialize);
@@ -16,7 +15,7 @@ define([
 
         onAdaptInitialize: function() {
             if (!this.checkIsEnabled()) return;
-            this.setupPrimaryEventListeners();
+            this.setupEventListeners();
             this.checkRestoreLocation();
         },
 
@@ -27,12 +26,10 @@ define([
             return true;
         },
 
-        setupPrimaryEventListeners: function() {
-
-            this.debounceOnScroll =_.debounce(_.bind(this.onScroll, Bookmarking), 1000);
-
-            this.listenTo(Adapt, 'menuView:ready', this.onMenuReady);
-            this.listenTo(Adapt, 'pageView:preRender', this.onPagePreRender);
+        setupEventListeners: function() {
+            this._onWindowClose = _.bind(this.onWindowClose, Bookmarking);
+            this.listenTo(Adapt, 'menuView:ready', this.setupMenu);
+            this.listenTo(Adapt, 'pageView:preRender', this.setupPage);
         },
 
         checkRestoreLocation: function() {
@@ -45,7 +42,6 @@ define([
 
         restoreLocation: function() {
             _.defer(_.bind(function() {
-
                 this.stopListening(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
 
                 var courseBookmarkModel = Adapt.course.get('_bookmarking');
@@ -59,8 +55,12 @@ define([
                     return;
                 }
 
-                this.showPrompt();
+                var locationOnscreen = $("."+this.locationID).onscreen();
+                var isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
 
+                if ( isLocationOnscreen ) return;
+
+                this.showPrompt();
             }, this));
         },
 
@@ -72,16 +72,12 @@ define([
                     no: "No"
                 };
             }
-            if (!courseBookmarkModel._buttons.yes) {
-                courseBookmarkModel._buttons.yes = "Yes";
-            }
-            if (!courseBookmarkModel._buttons.no) {
-                courseBookmarkModel._buttons.no = "No";
-            }
+            if (!courseBookmarkModel._buttons.yes) courseBookmarkModel._buttons.yes = "Yes";
+            if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = "No";
 
 
-            this.listenToOnce(Adapt, "bookmarking:continue", this.onNavigateToPrevious);
-            this.listenToOnce(Adapt, "bookmarking:cancel", this.onNavigateCancel);
+            this.listenToOnce(Adapt, "bookmarking:continue", this.navigateToPrevious);
+            this.listenToOnce(Adapt, "bookmarking:cancel", this.navigateCancel);
 
             var promptObject = {
                 title: courseBookmarkModel.title,
@@ -99,10 +95,21 @@ define([
                 _showIcon: true
             }
 
-            Adapt.trigger('notify:prompt', promptObject);
+            if (Adapt.config.get("_accessibility") && Adapt.config.get("_accessibility")._isActive) {
+                $(".loading").show();
+                $("#a11y-focuser").focus();
+                $("body").attr("aria-hidden", true);
+                _.delay(function() {
+                    $(".loading").hide();
+                    $("body").removeAttr("aria-hidden");
+                    Adapt.trigger('notify:prompt', promptObject);
+                }, 3000);
+            } else {
+                Adapt.trigger('notify:prompt', promptObject);
+            }
         },
 
-        onNavigateToPrevious: function() {
+        navigateToPrevious: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
             
             _.defer(function() {
@@ -112,127 +119,77 @@ define([
             this.stopListening(Adapt, "bookmarking:cancel");
         },
 
-        onNavigateCancel: function() {
+        navigateCancel: function() {
             this.stopListening(Adapt, "bookmarking:continue");
         },
 
-        resetLocation: function () {
-            this.saveLocation('');
+        resetLocationID: function () {
+            this.setLocationID('');
         },
 
-        onMenuReady: function(menuView) {
+        setupMenu: function(menuView) {
             var menuModel = menuView.model;
-            if (menuModel.get("_parentId")) return this.saveLocation(menuModel.get("_id"));
-            else this.resetLocation();
+            //set location as menu id unless menu is course, then reset location
+            if (menuModel.get("_parentId")) return this.setLocationID(menuModel.get("_id"));
+            else this.resetLocationID();
         },
         
-        onPagePreRender: function (pageView) {
+        setupPage: function (pageView) {
             var hasPageBookmarkObject = pageView.model.has('_bookmarking');
             var bookmarkModel = (hasPageBookmarkObject) ? pageView.model.get('_bookmarking') : Adapt.course.get('_bookmarking');
             this.bookmarkLevel = bookmarkModel._level;
 
             if (!bookmarkModel._isEnabled) {
-                this.resetLocation();
+                this.resetLocationID();
                 return;
-            } else if (this.bookmarkLevel === 'page') {
-                this.saveLocation(pageView.model.get('_id'));
             } else {
-                $(window).on("scroll", this._debounceOnScroll);
-                this.listenTo(Adapt, this.bookmarkLevel + "View:postRender", this.addInViewListeners);
-                this.listenToOnce(Adapt, "remove", this.removeInViewListeners);
+                //set location as page id
+                this.watchViewIds = pageView.model.findDescendants(this.bookmarkLevel+"s").pluck("_id");
+                this.setLocationID(pageView.model.get('_id'));
+                this.listenTo(Adapt, this.bookmarkLevel + "View:postRender", this.captureViews);
+                this.listenToOnce(Adapt, "remove", this.releaseViews);
+                $(window).on("beforeunload pagehide", this._onWindowClose);
             }
         },
 
-        addInViewListeners: function (view) {
-            var element = view.$el;
-            var id = view.model.get('_id');
-            element.data('locationID', id);
-            element.on('onscreen', _.bind(this.delayOnScreen, this));
-            this.inviewEventListeners.push(element);
+        captureViews: function (view) {
+            this.watchViews.push(view);
         },
 
-        delayOnScreen: function(event) {
-            var $target = $(event.target);
-
-            _.delay(_.bind(function(){
-            
-                this.onScreen($target)
-
-            },this), 1000);
-        },
-
-        onScreen: function ($target) {
-            var id = $target.data('locationID');
-
-            this.recheckOnScreens();
-
-            var isInList = _.findWhere(this.currentOnScreens, { id : id } );
-
-            if (!isInList) {
-                var measurements =  $target.onscreen();
-
-                if (measurements.onscreen) {                
-                    this.currentOnScreens.push({
-                        id: id,
-                        $target: $target,
-                        measurements: measurements
-                    });
-                } else {
-                    return;
-                }
-
-            } else {
-
-                if (!isInList.measurements.onscreen) {
-                    this.currentOnScreens = _.reject(this.currentOnScreens, function(item) {
-                        return item.id == id;
-                    });
-                }
-            }
-
-            this.sortOnScreenItems();
-            this.setLocation();
-        },
-
-        recheckOnScreens: function() {
-            for (var i = 0, l = this.currentOnScreens.length; i < l; i++) {
-                var currentOnScreen = this.currentOnScreens[i];
-                currentOnScreen.measurements = currentOnScreen.$target.onscreen();
-            }
-        },
-
-        sortOnScreenItems: function() {
-            if (this.currentOnScreens.length === 0) return;
-            
-            this.currentIndexViews = this.currentOnScreens.sort(function(item1, item2) {
-                return item2.measurements.percentInview-item1.measurements.percentInview;
-            });
-        },
-
-        onScroll: function() {
-            this.recheckOnScreens();
-            this.sortOnScreenItems();
-            this.setLocationToFirstVisible();
-        },
-
-        setLocation: function() {
-            if (this.currentOnScreens.length === 0) this.resetLocation();
-            else if (typeof this.currentOnScreens[0].id == 'undefined') return;
-            else this.saveLocation(this.currentOnScreens[0].id);
-        },
-
-        saveLocation: function (id) {
+        setLocationID: function (id) {
             if (!Adapt.offlineStorage) return;
-            if (this.locationID == id) return;
             Adapt.offlineStorage.set("location", id);
-            this.locationID = id;
         },
 
-        removeInViewListeners: function () {
-            $(this.inviewEventListeners).off('onscreen');
-            this.currentOnScreens.length = 0;
-            this.inviewEventListeners.length = 0;
-            this.stopListening(Adapt, this.bookmarkLevel + 'View:postRender', this.addInViewListeners);
+        releaseViews: function () {
+            this.watchViews.length = 0;
+            this.watchViewIds.length = 0;
+            this.stopListening(Adapt, 'remove', this.releaseViews);
+            this.stopListening(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
+            $(window).off("beforeunload pagehide", this._onWindowClose);
+        },
+
+        onWindowClose: function() {
+            var highestOnscreen = 0;
+            var highestOnscreenLocation = "";
+
+            var locationObjects = [];
+            for (var i = 0, l = this.watchViews.length; i < l; i++) {
+                var view = this.watchViews[i];
+
+                var isViewAPageChild = (_.indexOf(this.watchViewIds, view.model.get("_id")) > -1 );
+
+                if ( !isViewAPageChild ) continue;
+
+                var measurements = $("."+view.model.get("_id")).onscreen();
+                if (measurements.percentInview > highestOnscreen) {
+                    highestOnscreen = measurements.percentInview;
+                    highestOnscreenLocation = view.model.get("_id");
+                }
+            }
+
+            //set location as most inview component
+            if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
         }
 
     }, Backbone.Events)
