@@ -70,7 +70,7 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 ## Limitations
  
 **Bookmarking** only works if [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system (LMS). 
->**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor/tree/develop#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
+>**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
 **Version number:**  2.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
