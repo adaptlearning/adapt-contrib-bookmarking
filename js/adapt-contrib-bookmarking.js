@@ -36,7 +36,7 @@ define([
         checkRestoreLocation: function() {
             this.restoredLocationID = Adapt.offlineStorage.get("location");
 
-            if (!this.restoredLocationID) return;
+            if (!this.restoredLocationID || this.restoredLocationID === "undefined") return;
 
             this.listenToOnce(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
         },
