@@ -2,7 +2,7 @@
 
 **Bookmarking** is an *extension* bundled with the [Adapt framework](https://github.com/adaptlearning/adapt_framework).  
 
-<img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/bookmarking01.gif" alt="bookmarking in action">
+<img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/bookmarking.gif" alt="bookmarking in action" width="598" height="516"/>
 
 Upon returning to the course, a prompt inquires whether the learner would like to continue where they left off. If the learner selects "yes", the course navigates to the most recently visited structural element (page, block, or component), based on configuration. If the learner selects "no", the course remains at the top-level menu.
 
