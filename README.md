@@ -67,6 +67,9 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 
 <div float align=right><a href="#top">Back to Top</a></div>
 
+#### Exclusion from bookmarking
+You can exclude from bookmarking elements specified at the `_level` property. You have to put there the `_bookmarking` property with `_isEnabled` set to false. If the `_level` is block then do this in the `blocks.json`.
+
 ## Limitations
  
 **Bookmarking** only works if [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system (LMS). 
