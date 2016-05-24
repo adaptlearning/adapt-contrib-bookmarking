@@ -157,6 +157,15 @@ define([
         setLocationID: function (id) {
             if (!Adapt.offlineStorage) return;
             if (this.currentLocationID == id) return;
+            if (id && id !== "") {
+                try {
+                    var model = Adapt.findById(id),
+                        bookmark = model ? model.get("_bookmarking") : undefined;
+                    if (bookmark && bookmark.hasOwnProperty("_isEnabled") && !bookmark._isEnabled) {
+                        return;//skip
+                    }
+                } catch (err) { console.error("Bookmarking#setLocationID", err); }
+            }
             Adapt.offlineStorage.set("location", id);
             this.currentLocationID = id;
         },
