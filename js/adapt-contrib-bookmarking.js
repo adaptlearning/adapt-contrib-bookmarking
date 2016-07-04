@@ -52,6 +52,8 @@ define([
                 } catch (error) {
                     return;
                 }
+                
+                if (!model) return;
 
                 var locationOnscreen = $("." + this.restoredLocationID).onscreen();
                 var isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
