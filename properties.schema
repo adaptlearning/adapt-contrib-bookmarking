@@ -24,9 +24,9 @@
                   "required":true,
                   "default": true,
                   "title": "Is enabled",
-                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "If set to 'true', bookmarking will be turned on"
+                  "help": "Controls whether the Bookmarking extension is enabled or disabled."
                 },
                 "_level": {
                   "type":"string",
@@ -36,7 +36,7 @@
                   "title": "Level",
                   "inputType": {"type": "Select", "options":["page", "block", "component"]},
                   "validators": ["required"],
-                  "help": "Select the type of view to which the learner is returned"
+                  "help": "Allows you to set whether Bookmarking is done at page, block or component level."
                 },
                 "title": {
                   "type": "string",
@@ -95,9 +95,9 @@
                   "required":true,
                   "default": true,
                   "title": "Is enabled",
-                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "If set to 'true', bookmarking will be turned on. Overrides bookmark setting for the course."
+                  "help": "Controls whether Bookmarking is enabled or disabled for this page of the course."
                 },
                 "_level": {
                   "type":"string",
@@ -107,7 +107,7 @@
                   "title": "Level",
                   "inputType": {"type": "Select", "options":["page", "block", "component"]},
                   "validators": ["required"],
-                  "help": "Select the type of view to which the learner is returned"
+                  "help": "Allows you to set whether Bookmarking is done at page, block or component level for this page of the course."
                 }
               }
             }
