@@ -1,6 +1,10 @@
 # adapt-contrib-bookmarking  
 
-**Bookmarking** is an *extension* bundled with the [Adapt framework](https://github.com/adaptlearning/adapt_framework).  
+**Bookmarking** is an *extension* bundled with the [Adapt framework](https://github.com/adaptlearning/adapt_framework). 
+
+The **Bookmarking** extension is responsible for maintaining a record of the learner's current location within the course so that when they quit and relaunch they may be given the option to be returned to that same location - hence the term 'bookmarking'. 
+
+> Note that although 'bookmarking' is a feature of SCORM and the **Bookmarking** extension therefore requires the [Spoor extension](https://github.com/adaptlearning/adapt-contrib-spoor), it has nothing whatsoever to do with the storing and restoring of course progress; this is handled by the spoor extension completely independently of the bookmarking function and will take place whether the **Bookmarking** extension is installed/enabled or not.
 
 <img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/bookmarking.gif" alt="bookmarking in action" width="598" height="516"/>
 
