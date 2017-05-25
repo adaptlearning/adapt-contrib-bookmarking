@@ -10,7 +10,7 @@ This prompt will not appear on first launch or if the user exits from the top-le
 
 [Visit the **Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-bookmarking/wiki) for more information about its functionality and for explanations of key properties. 
 
-##Installation
+## Installation
 
 As one of Adapt's *[core extensions](https://github.com/adaptlearning/adapt_framework/wiki/Core-Plug-ins-in-the-Adapt-Learning-Framework#extensions),* **Bookmarking** is included with the [installation of the Adapt framework](https://github.com/adaptlearning/adapt_framework/wiki/Manual-installation-of-the-Adapt-framework#installation) and the [installation of the Adapt authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-Adapt-Origin).
 
