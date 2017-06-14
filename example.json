@@ -2,6 +2,7 @@
 "_bookmarking": {
     "_isEnabled": true,
     "_level": "page" | "block" | "component",
+    "_showPrompt": true,
     "title": "Bookmarking",
     "body": "Would you like to continue where you left off?",
     "_buttons": {
