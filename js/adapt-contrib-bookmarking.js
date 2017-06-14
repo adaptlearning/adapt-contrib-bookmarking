@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt'
+    'core/js/adapt'
 ], function(Adapt) {
 
     var Bookmarking = _.extend({
@@ -89,15 +89,15 @@ define([
                 _prompts:[
                     {
                         promptText: courseBookmarkModel._buttons.yes,
-                        _callbackEvent: "bookmarking:continue",
+                        _callbackEvent: "bookmarking:continue"
                     },
                     {
                         promptText: courseBookmarkModel._buttons.no,
-                        _callbackEvent: "bookmarking:cancel",
+                        _callbackEvent: "bookmarking:cancel"
                     }
                 ],
                 _showIcon: true
-            }
+            };
 
             if (Adapt.config.get("_accessibility") && Adapt.config.get("_accessibility")._isActive) {
                 $(".loading").show();
@@ -203,7 +203,7 @@ define([
             if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
         }
 
-    }, Backbone.Events)
+    }, Backbone.Events);
 
     Bookmarking.initialize();
 
