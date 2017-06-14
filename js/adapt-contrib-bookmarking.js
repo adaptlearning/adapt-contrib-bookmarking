@@ -60,7 +60,11 @@ define([
                 var isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
                 if (isLocationOnscreen && isLocationFullyInview) return;
 
-                this.showPrompt();
+                if(Adapt.course.get('_bookmarking')._showPrompt === false) {
+                    this.navigateToPrevious();
+                } else {
+                    this.showPrompt();
+                }
             }, this));
         },
 
