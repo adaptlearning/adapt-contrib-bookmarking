@@ -42,11 +42,13 @@ Visit the [**Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-
 #### *course.json*  
 The following attributes, set within *course.json*, configure the defaults for **Bookmarking**.  
 
-**_bookmarking** (object): The bookmarking object that contains values for **_isEnabled**, **_level**, **title**, **body**, and **_buttons**.
+**_bookmarking** (object): The bookmarking object that contains values for **_isEnabled**, **_level**, **_showPrompt**, **title**, **body**, and **_buttons**.
 
->**_isEnabled** (boolean): Turns on and off the bookmarking extension. Acceptable values are `true` and `false`.
+>**_isEnabled** (boolean): Controls whether the bookmarking extension is enabled or not.
 
 >**_level** (string): This value determines the type of view to which the learner is returned. Acceptable values are `"page"`, `"block"` or `"component"`. (The `_id` of the most recent view to trigger `inview` is used for routing.)
+
+>**_showPrompt** (boolean): Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
 
 >**title** (string): Text that appears as the header of the prompt. 
 
@@ -65,7 +67,7 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 
 **_bookmarking** (object): The Bookmarking object that contains values for **_isEnabled** and **_level**.
 
->**_isEnabled** (boolean): Turns on and off the bookmarking extension. Acceptable values are `true` and `false`.
+>**_isEnabled** (boolean): Set to `false` to disable bookmarking for the specified content object. 
 
 >**_level** (string): This value determines the type of view to which the learner is returned. Acceptable values are `"page"`, `"block"` or `"component"`. (The `_id` of the most recent view to trigger `inview` is used for routing.)  
 
@@ -77,8 +79,8 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 >**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
-**Version number:**  2.0.3   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
-**Framework versions:**  2.0     
+**Version number:**  2.1.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
+**Framework versions:**  2.0.18     
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)    
 **Accessibility support:** WAI AA   
 **RTL support:** yes  
