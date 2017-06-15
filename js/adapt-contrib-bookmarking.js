@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var Bookmarking = _.extend({
+    var Bookmarking = Backbone.Controller.extend({
 
         bookmarkLevel: null,
         watchViewIds: null,
@@ -28,7 +28,7 @@ define([
         },
 
         setupEventListeners: function() {
-            this._onScroll = _.debounce(_.bind(this.checkLocation, Bookmarking), 1000);
+            this._onScroll = _.debounce(_.bind(this.checkLocation, this), 1000);
             this.listenTo(Adapt, 'menuView:ready', this.setupMenu);
             this.listenTo(Adapt, 'pageView:preRender', this.setupPage);
         },
@@ -203,8 +203,8 @@ define([
             if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
         }
 
-    }, Backbone.Events);
+    });
 
-    Bookmarking.initialize();
+    return new Bookmarking();
 
 });
