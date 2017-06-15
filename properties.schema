@@ -115,12 +115,66 @@
         },
         "article": {
           "type":"object"
+          "properties":{
+            "_bookmarking": {
+              "type": "object",
+              "required": false,
+              "legend": "Bookmarking",
+              "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "required":true,
+                  "default": false,
+                  "title": "Is enabled",
+                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "validators": [],
+                  "help": "If set to 'true', bookmarking will be turned on. Overrides bookmark setting for the course."
+                }
+              }
+            }
+          }
         },
         "block": {
           "type":"object"
+          "properties":{
+            "_bookmarking": {
+              "type": "object",
+              "required": false,
+              "legend": "Bookmarking",
+              "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "required":true,
+                  "default": false,
+                  "title": "Is enabled",
+                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "validators": [],
+                  "help": "If set to 'true', bookmarking will be turned on. Overrides bookmark setting for the course."
+                }
+              }
+            }
+          }
         },
         "component": {
           "type":"object"
+          "properties":{
+            "_bookmarking": {
+              "type": "object",
+              "required": false,
+              "legend": "Bookmarking",
+              "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "required":true,
+                  "default": false,
+                  "title": "Is enabled",
+                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "validators": [],
+                  "help": "If set to 'true', bookmarking will be turned on. Overrides bookmark setting for the course."
+                }
+              }
+            }
+          }
         }
       }
     }
