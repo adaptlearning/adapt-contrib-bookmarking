@@ -1,19 +1,19 @@
 {
-  "type":"object",
+  "type": "object",
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
-  "required":false,
-  "properties":{
+  "required": false,
+  "properties": {
     "pluginLocations": {
-      "type":"object",
-      "required":true,
-      "properties":{
+      "type": "object",
+      "required": true,
+      "properties": {
         "config": {
-          "type":"object"
+          "type": "object"
         },
         "course": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_bookmarking": {
               "type": "object",
               "required": false,
@@ -21,26 +21,26 @@
               "properties": {
                 "_isEnabled": {
                   "type": "boolean",
-                  "required":true,
+                  "required": true,
                   "default": true,
                   "title": "Is enabled",
-                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "If set to 'true', bookmarking will be turned on"
+                  "help": "Controls whether the Bookmarking extension is enabled or disabled."
                 },
                 "_level": {
-                  "type":"string",
-                  "required":true,
+                  "type": "string",
+                  "required": true,
                   "enum": ["page", "block", "component"],
                   "default": "page",
                   "title": "Level",
                   "inputType": {"type": "Select", "options":["page", "block", "component"]},
                   "validators": ["required"],
-                  "help": "Select the type of view to which the learner is returned"
+                  "help": "Allows you to set whether Bookmarking is done at page, block or component level."
                 },
                 "title": {
                   "type": "string",
-                  "default":"Bookmarking",
+                  "default": "Bookmarking",
                   "required": false,
                   "title": "Prompt Title",
                   "inputType": "Text",
@@ -49,7 +49,7 @@
                 },
                 "body": {
                   "type": "string",
-                  "default":"Bookmarking",
+                  "default": "Bookmarking",
                   "required": false,
                   "title": "Prompt Message",
                   "inputType": "Text",
@@ -57,7 +57,7 @@
                   "translatable": true
                 },
                 "_buttons": {
-                  "type":"object",
+                  "type": "object",
                   "title": "Prompt Buttons",
                   "properties": {
                     "yes": {
@@ -83,8 +83,8 @@
           }
         },
         "contentobject": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_bookmarking": {
               "type": "object",
               "required": false,
@@ -92,35 +92,35 @@
               "properties": {
                 "_isEnabled": {
                   "type": "boolean",
-                  "required":true,
+                  "required": true,
                   "default": true,
                   "title": "Is enabled",
-                  "inputType": {"type": "Boolean", "options": [true, false]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "If set to 'true', bookmarking will be turned on. Overrides bookmark setting for the course."
+                  "help": "Controls whether Bookmarking is enabled or disabled for this page of the course."
                 },
                 "_level": {
-                  "type":"string",
-                  "required":true,
+                  "type": "string",
+                  "required": true,
                   "enum": ["page", "block", "component"],
                   "default": "page",
                   "title": "Level",
                   "inputType": {"type": "Select", "options":["page", "block", "component"]},
                   "validators": ["required"],
-                  "help": "Select the type of view to which the learner is returned"
+                  "help": "Allows you to set whether Bookmarking is done at page, block or component level for this page of the course."
                 }
               }
             }
           }
         },
         "article": {
-          "type":"object"
+          "type": "object"
         },
         "block": {
-          "type":"object"
+          "type": "object"
         },
         "component": {
-          "type":"object"
+          "type": "object"
         }
       }
     }
