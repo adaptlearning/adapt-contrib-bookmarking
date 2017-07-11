@@ -188,11 +188,9 @@ define([
                 if ( !isViewAPageChild ) continue;
 
                 var element = $("." + view.model.get("_id"));
-                var isVisible = (element.is(":visible"));
-
-                if (!isVisible) continue;
-
                 var measurements = element.onscreen();
+                
+                if (!measurements.onscreen) continue;
                 if (measurements.percentInview > highestOnscreen) {
                     highestOnscreen = measurements.percentInview;
                     highestOnscreenLocation = view.model.get("_id");
