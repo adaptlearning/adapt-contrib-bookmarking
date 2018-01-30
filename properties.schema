@@ -38,6 +38,15 @@
                   "validators": ["required"],
                   "help": "Allows you to set whether Bookmarking is done at page, block or component level."
                 },
+                "_showPrompt": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": true,
+                  "title": "Show prompt",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Controls whether the Bookmarking prompt is enabled or disabled. False returns the user to their bookmarked position automatically."
+                },
                 "title": {
                   "type": "string",
                   "default": "Bookmarking",
