@@ -45,7 +45,7 @@
                   "title": "Show prompt",
                   "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Controls whether the Bookmarking prompt is enabled or disabled. False returns the user to their bookmarked position automatically."
+                  "help": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically."
                 },
                 "title": {
                   "type": "string",
