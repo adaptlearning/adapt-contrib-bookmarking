@@ -6,7 +6,7 @@
   "issues": "https://github.com/adaptlearning/adapt_framework/issues/new",
   "displayName" : "Bookmarking",
   "extension" : "bookmarking",
-  "description": "Keeps record of the learner's current location within the course so that when they quit and relaunch they may be given the option to be returned to that same location",
+  "description": "An extension that tracks the learner's location in the course so that it can return them to that location in a subsequent session",
   "main": "/js/adapt-contrib-bookmarking.js",
   "keywords": [
     "adapt-plugin",
