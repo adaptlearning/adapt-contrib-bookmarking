@@ -11,7 +11,7 @@ define([
         currentLocationID: null,
 
         initialize: function () {
-            this.listenToOnce(Adapt, "router:location", this.onAdaptInitialize);
+            this.listenToOnce(Adapt, 'router:location', this.onAdaptInitialize);
         },
 
         onAdaptInitialize: function() {
@@ -34,16 +34,16 @@ define([
         },
 
         checkRestoreLocation: function() {
-            this.restoredLocationID = Adapt.offlineStorage.get("location");
+            this.restoredLocationID = Adapt.offlineStorage.get('location');
 
-            if (!this.restoredLocationID || this.restoredLocationID === "undefined") return;
+            if (!this.restoredLocationID || this.restoredLocationID === 'undefined') return;
 
-            this.listenToOnce(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
+            this.listenToOnce(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
         },
 
         restoreLocation: function() {
             _.defer(_.bind(function() {
-                this.stopListening(Adapt, "pageView:ready menuView:ready", this.restoreLocation);
+                this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
 
                 if (this.restoredLocationID == Adapt.location._currentId) return;
 
@@ -52,10 +52,10 @@ define([
                 } catch (error) {
                     return;
                 }
-                
+
                 if (!model) return;
 
-                var locationOnscreen = $("." + this.restoredLocationID).onscreen();
+                var locationOnscreen = $('.' + this.restoredLocationID).onscreen();
                 var isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
                 var isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
                 if (isLocationOnscreen && isLocationFullyInview) return;
@@ -72,16 +72,16 @@ define([
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
             if (!courseBookmarkModel._buttons) {
                 courseBookmarkModel._buttons = {
-                    yes: "Yes",
-                    no: "No"
+                    yes: 'Yes',
+                    no: 'No'
                 };
             }
-            if (!courseBookmarkModel._buttons.yes) courseBookmarkModel._buttons.yes = "Yes";
-            if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = "No";
+            if (!courseBookmarkModel._buttons.yes) courseBookmarkModel._buttons.yes = 'Yes';
+            if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = 'No';
 
 
-            this.listenToOnce(Adapt, "bookmarking:continue", this.navigateToPrevious);
-            this.listenToOnce(Adapt, "bookmarking:cancel", this.navigateCancel);
+            this.listenToOnce(Adapt, 'bookmarking:continue', this.navigateToPrevious);
+            this.listenToOnce(Adapt, 'bookmarking:cancel', this.navigateCancel);
 
             var promptObject = {
                 title: courseBookmarkModel.title,
@@ -89,23 +89,23 @@ define([
                 _prompts:[
                     {
                         promptText: courseBookmarkModel._buttons.yes,
-                        _callbackEvent: "bookmarking:continue"
+                        _callbackEvent: 'bookmarking:continue'
                     },
                     {
                         promptText: courseBookmarkModel._buttons.no,
-                        _callbackEvent: "bookmarking:cancel"
+                        _callbackEvent: 'bookmarking:cancel'
                     }
                 ],
                 _showIcon: true
             };
 
-            if (Adapt.config.get("_accessibility") && Adapt.config.get("_accessibility")._isActive) {
-                $(".loading").show();
-                $("#a11y-focuser").focus();
-                $("body").attr("aria-hidden", true);
+            if (Adapt.config.get('_accessibility') && Adapt.config.get('_accessibility')._isActive) {
+                $('.loading').show();
+                $('#a11y-focuser').focus();
+                $('body').attr('aria-hidden', true);
                 _.delay(function() {
-                    $(".loading").hide();
-                    $("body").removeAttr("aria-hidden");
+                    $('.loading').hide();
+                    $('body').removeAttr('aria-hidden');
                     Adapt.trigger('notify:prompt', promptObject);
                 }, 3000);
             } else {
@@ -115,15 +115,15 @@ define([
 
         navigateToPrevious: function() {
             _.defer(_.bind(function() {
-                var isSinglePage = Adapt.contentObjects.models.length == 1; 
+                var isSinglePage = Adapt.contentObjects.models.length == 1;
                 Backbone.history.navigate('#/id/' + this.restoredLocationID, {trigger: true, replace: isSinglePage});
             }, this));
-            
-            this.stopListening(Adapt, "bookmarking:cancel");
+
+            this.stopListening(Adapt, 'bookmarking:cancel');
         },
 
         navigateCancel: function() {
-            this.stopListening(Adapt, "bookmarking:continue");
+            this.stopListening(Adapt, 'bookmarking:continue');
         },
 
         resetLocationID: function () {
@@ -133,10 +133,10 @@ define([
         setupMenu: function(menuView) {
             var menuModel = menuView.model;
             //set location as menu id unless menu is course, then reset location
-            if (menuModel.get("_parentId")) return this.setLocationID(menuModel.get("_id"));
+            if (menuModel.get('_parentId')) return this.setLocationID(menuModel.get('_id'));
             else this.resetLocationID();
         },
-        
+
         setupPage: function (pageView) {
             var hasPageBookmarkObject = pageView.model.has('_bookmarking');
             var bookmarkModel = (hasPageBookmarkObject) ? pageView.model.get('_bookmarking') : Adapt.course.get('_bookmarking');
@@ -149,12 +149,12 @@ define([
                 //set location as page id
                 this.setLocationID(pageView.model.get('_id'));
 
-                this.watchViewIds = _.map(pageView.model.findDescendantModels(this.bookmarkLevel+"s"), function(desc) {
-                    return desc.get("_id");
+                this.watchViewIds = _.map(pageView.model.findDescendantModels(this.bookmarkLevel+'s'), function(desc) {
+                    return desc.get('_id');
                 });
-                this.listenTo(Adapt, this.bookmarkLevel + "View:postRender", this.captureViews);
-                this.listenToOnce(Adapt, "remove", this.releaseViews);
-                $(window).on("scroll", this._onScroll);
+                this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
+                this.listenToOnce(Adapt, 'remove', this.releaseViews);
+                $(window).on('scroll', this._onScroll);
             }
         },
 
@@ -165,7 +165,7 @@ define([
         setLocationID: function (id) {
             if (!Adapt.offlineStorage) return;
             if (this.currentLocationID == id) return;
-            Adapt.offlineStorage.set("location", id);
+            Adapt.offlineStorage.set('location', id);
             this.currentLocationID = id;
         },
 
@@ -174,28 +174,28 @@ define([
             this.watchViewIds.length = 0;
             this.stopListening(Adapt, 'remove', this.releaseViews);
             this.stopListening(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
-            $(window).off("scroll", this._onScroll);
+            $(window).off('scroll', this._onScroll);
         },
 
         checkLocation: function() {
             var highestOnscreen = 0;
-            var highestOnscreenLocation = "";
+            var highestOnscreenLocation = '';
 
             var locationObjects = [];
             for (var i = 0, l = this.watchViews.length; i < l; i++) {
                 var view = this.watchViews[i];
 
-                var isViewAPageChild = (_.indexOf(this.watchViewIds, view.model.get("_id")) > -1 );
+                var isViewAPageChild = (_.indexOf(this.watchViewIds, view.model.get('_id')) > -1 );
 
                 if ( !isViewAPageChild ) continue;
 
-                var element = $("." + view.model.get("_id"));
+                var element = $('.' + view.model.get('_id'));
                 var measurements = element.onscreen();
-                
+
                 if (!measurements.onscreen) continue;
                 if (measurements.percentInview > highestOnscreen) {
                     highestOnscreen = measurements.percentInview;
-                    highestOnscreenLocation = view.model.get("_id");
+                    highestOnscreenLocation = view.model.get('_id');
                 }
             }
 
