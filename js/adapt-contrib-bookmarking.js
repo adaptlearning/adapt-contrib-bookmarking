@@ -28,7 +28,7 @@ define([
         },
 
         setupEventListeners: function() {
-            this._onScroll = _.debounce(_.bind(this.checkLocation, this), 1000);
+            this._onScroll = _.debounce(this.checkLocation.bind(this), 1000);
             this.listenTo(Adapt, 'menuView:ready', this.setupMenu);
             this.listenTo(Adapt, 'pageView:preRender', this.setupPage);
         },
@@ -42,7 +42,7 @@ define([
         },
 
         restoreLocation: function() {
-            _.defer(_.bind(function() {
+            _.defer(function() {
                 this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
 
                 if (this.restoredLocationID == Adapt.location._currentId) return;
@@ -65,7 +65,7 @@ define([
                 } else {
                     this.showPrompt();
                 }
-            }, this));
+            }.bind(this));
         },
 
         showPrompt: function() {
@@ -114,10 +114,10 @@ define([
         },
 
         navigateToPrevious: function() {
-            _.defer(_.bind(function() {
+            _.defer(function() {
                 var isSinglePage = Adapt.contentObjects.models.length == 1;
                 Backbone.history.navigate('#/id/' + this.restoredLocationID, {trigger: true, replace: isSinglePage});
-            }, this));
+            }.bind(this));
 
             this.stopListening(Adapt, 'bookmarking:cancel');
         },
@@ -185,7 +185,7 @@ define([
             for (var i = 0, l = this.watchViews.length; i < l; i++) {
                 var view = this.watchViews[i];
 
-                var isViewAPageChild = (_.indexOf(this.watchViewIds, view.model.get('_id')) > -1 );
+                var isViewAPageChild = (this.watchViewIds.indexOf(view.model.get('_id')) > -1 );
 
                 if ( !isViewAPageChild ) continue;
 
