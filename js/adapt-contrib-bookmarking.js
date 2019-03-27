@@ -29,8 +29,10 @@ define([
 
         setupEventListeners: function() {
             this._onScroll = _.debounce(this.checkLocation.bind(this), 1000);
-            this.listenTo(Adapt, 'menuView:ready', this.setupMenu);
-            this.listenTo(Adapt, 'pageView:preRender', this.setupPage);
+            this.listenTo(Adapt, {
+                'menuView:ready': this.setupMenu,
+                'pageView:preRender': this.setupPage
+            });
         },
 
         checkRestoreLocation: function() {
@@ -80,8 +82,10 @@ define([
             if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = 'No';
 
 
-            this.listenToOnce(Adapt, 'bookmarking:continue', this.navigateToPrevious);
-            this.listenToOnce(Adapt, 'bookmarking:cancel', this.navigateCancel);
+            this.listenToOnce(Adapt, {
+                'bookmarking:continue': this.navigateToPrevious,
+                'bookmarking:cancel': this.navigateCancel
+            });
 
             var promptObject = {
                 title: courseBookmarkModel.title,
