@@ -149,17 +149,16 @@ define([
             if (!bookmarkModel._isEnabled) {
                 this.resetLocationID();
                 return;
-            } else {
-                //set location as page id
-                this.setLocationID(pageView.model.get('_id'));
-
-                this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel+'s').map(function(desc) {
-                    return desc.get('_id');
-                });
-                this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
-                this.listenToOnce(Adapt, 'remove', this.releaseViews);
-                $(window).on('scroll', this._onScroll);
             }
+
+            this.setLocationID(pageView.model.get('_id'));
+
+            this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel + 's').map(function(desc) {
+                return desc.get('_id');
+            });
+            this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
+            this.listenToOnce(Adapt, 'remove', this.releaseViews);
+            $(window).on('scroll', this._onScroll);
         },
 
         captureViews: function (view) {
@@ -185,7 +184,6 @@ define([
             var highestOnscreen = 0;
             var highestOnscreenLocation = '';
 
-            var locationObjects = [];
             for (var i = 0, l = this.watchViews.length; i < l; i++) {
                 var view = this.watchViews[i];
 
