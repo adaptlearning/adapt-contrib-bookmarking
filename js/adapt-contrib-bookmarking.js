@@ -153,7 +153,7 @@ define([
                 //set location as page id
                 this.setLocationID(pageView.model.get('_id'));
 
-                this.watchViewIds = _.map(pageView.model.findDescendantModels(this.bookmarkLevel+'s'), function(desc) {
+                this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel+'s').map(function(desc) {
                     return desc.get('_id');
                 });
                 this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
