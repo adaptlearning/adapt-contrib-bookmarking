@@ -47,40 +47,28 @@ define([
             _.defer(function() {
                 this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
 
-                if (this.restoredLocationID == Adapt.location._currentId) return;
-
-                try {
-                    var model = Adapt.findById(this.restoredLocationID);
-                } catch (error) {
+                if ((this.restoredLocationID === Adapt.location._currentId) || !Adapt.findById(this.restoredLocationID)) {
                     return;
                 }
-
-                if (!model) return;
-
                 var locationOnscreen = $('.' + this.restoredLocationID).onscreen();
                 var isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
                 var isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
-                if (isLocationOnscreen && isLocationFullyInview) return;
+                if (isLocationOnscreen && isLocationFullyInview) {
+                    return;
+                }
 
                 if(Adapt.course.get('_bookmarking')._showPrompt === false) {
                     this.navigateToPrevious();
-                } else {
-                    this.showPrompt();
+                    return;
                 }
+                this.showPrompt();
+
             }.bind(this));
         },
 
         showPrompt: function() {
             var courseBookmarkModel = Adapt.course.get('_bookmarking');
-            if (!courseBookmarkModel._buttons) {
-                courseBookmarkModel._buttons = {
-                    yes: 'Yes',
-                    no: 'No'
-                };
-            }
-            if (!courseBookmarkModel._buttons.yes) courseBookmarkModel._buttons.yes = 'Yes';
-            if (!courseBookmarkModel._buttons.no) courseBookmarkModel._buttons.no = 'No';
-
+            var buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
 
             this.listenToOnce(Adapt, {
                 'bookmarking:continue': this.navigateToPrevious,
@@ -92,29 +80,31 @@ define([
                 body: courseBookmarkModel.body,
                 _prompts:[
                     {
-                        promptText: courseBookmarkModel._buttons.yes,
+                        promptText: buttons.yes || 'Yes',
                         _callbackEvent: 'bookmarking:continue'
                     },
                     {
-                        promptText: courseBookmarkModel._buttons.no,
+                        promptText: buttons.no || 'No',
                         _callbackEvent: 'bookmarking:cancel'
                     }
                 ],
                 _showIcon: true
             };
 
-            if (Adapt.config.get('_accessibility') && Adapt.config.get('_accessibility')._isActive) {
-                $('.loading').show();
-                $('#a11y-focuser').focus();
-                $('body').attr('aria-hidden', true);
-                _.delay(function() {
-                    $('.loading').hide();
-                    $('body').removeAttr('aria-hidden');
-                    Adapt.trigger('notify:prompt', promptObject);
-                }, 3000);
-            } else {
+            var accessibility = Adapt.config.get('_accessibility');
+            if (!accessibility || !accessibility._isActive) {
                 Adapt.trigger('notify:prompt', promptObject);
+                return;
             }
+
+            $('.loading').show();
+            $('#a11y-focuser').focus();
+            $('body').attr('aria-hidden', true);
+            _.delay(function() {
+                $('.loading').hide();
+                $('body').removeAttr('aria-hidden');
+                Adapt.trigger('notify:prompt', promptObject);
+            }, 3000);
         },
 
         navigateToPrevious: function() {
@@ -134,11 +124,19 @@ define([
             this.setLocationID('');
         },
 
+        /**
+         * if the learner navigates to the top-level menu, clear the stored bookmark
+         * if it's a sub-menu, store the menu's id as the bookmark
+         */
         setupMenu: function(menuView) {
             var menuModel = menuView.model;
-            //set location as menu id unless menu is course, then reset location
-            if (menuModel.get('_parentId')) return this.setLocationID(menuModel.get('_id'));
-            else this.resetLocationID();
+
+            if (!menuModel.get('_parentId')) {
+                this.resetLocationID();
+                return;
+            }
+
+            this.setLocationID(menuModel.get('_id'));
         },
 
         setupPage: function (pageView) {
