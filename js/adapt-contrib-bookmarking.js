@@ -139,15 +139,36 @@ define([
             this.setLocationID(menuModel.get('_id'));
         },
 
-        setupPage: function (pageView) {
-            var hasPageBookmarkObject = pageView.model.has('_bookmarking');
-            var bookmarkModel = (hasPageBookmarkObject) ? pageView.model.get('_bookmarking') : Adapt.course.get('_bookmarking');
-            this.bookmarkLevel = bookmarkModel._level;
+        /**
+         * Calculates what the bookmarking 'level' will be for any given page.
+         * First sets a default using the course-level setting (or 'component' if that's not been set)
+         * then checks to see if that's being overridden at page level or not
+         * @param {Backbone.Model} pageModel The model for the current page view
+         * @return {String} Either 'page', 'block', or 'component' - with 'component' being the default
+         */
+        getBookmarkLevel: function(pageModel) {
+            var defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
 
-            if (!bookmarkModel._isEnabled) {
+            if (pageModel.has('_bookmarking')) {
+                var bookmarkModel = pageModel.get('_bookmarking');
+                if (!bookmarkModel._level || bookmarkModel._level === 'inherit') {
+                    return defaultLevel;
+                }
+
+                return bookmarkModel._level;
+            }
+
+            return defaultLevel;
+        },
+
+        setupPage: function (pageView) {
+            // is bookmarking disabled at page level?
+            if (pageView.model.has('_bookmarking') && pageView.model.get('_bookmarking')._isEnabled === false) {
                 this.resetLocationID();
                 return;
             }
+
+            this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
 
             this.setLocationID(pageView.model.get('_id'));
 
