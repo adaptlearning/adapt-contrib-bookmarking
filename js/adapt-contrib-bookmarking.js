@@ -168,15 +168,20 @@ define([
                 return;
             }
 
-            this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
-
             this.setLocationID(pageView.model.get('_id'));
+
+            this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
+            if (this.bookmarkLevel === 'page') {
+                return;
+            }
 
             this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel + 's').map(function(desc) {
                 return desc.get('_id');
             });
+
             this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
             this.listenToOnce(Adapt, 'remove', this.releaseViews);
+
             $(window).on('scroll', this._onScroll);
         },
 
