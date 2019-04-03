@@ -148,22 +148,21 @@ define([
          */
         getBookmarkLevel: function(pageModel) {
             var defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
-
-            if (pageModel.has('_bookmarking')) {
-                var bookmarkModel = pageModel.get('_bookmarking');
-                if (!bookmarkModel._level || bookmarkModel._level === 'inherit') {
-                    return defaultLevel;
-                }
-
-                return bookmarkModel._level;
-            }
-
-            return defaultLevel;
+            var bookmarkModel = pageModel.get('_bookmarking');
+            var isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
+            return isInherit ? defaultLevel : bookmarkModel._level;
         },
 
+        /**
+         * Sets up bookmarking for the page the learner just navigated to
+         * If bookmarking is disabled for the current page, clear the stored bookmark and return.
+         * Otherwise, bookmark the page then - if necessary - set up to calculate which block or component
+         * should be bookmarked as the learner scrolls up/down the page
+         * @param {Backbone.View} pageView The current page view
+         */
         setupPage: function (pageView) {
-            // is bookmarking disabled at page level?
-            if (pageView.model.has('_bookmarking') && pageView.model.get('_bookmarking')._isEnabled === false) {
+            var pageBookmarkModel = pageView.model.get('_bookmarking');
+            if (pageBookmarkModel && pageBookmarkModel._isEnabled === false) {
                 this.resetLocationID();
                 return;
             }
