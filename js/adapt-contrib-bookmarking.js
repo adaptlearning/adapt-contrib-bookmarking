@@ -139,23 +139,48 @@ define([
             this.setLocationID(menuModel.get('_id'));
         },
 
-        setupPage: function (pageView) {
-            var hasPageBookmarkObject = pageView.model.has('_bookmarking');
-            var bookmarkModel = (hasPageBookmarkObject) ? pageView.model.get('_bookmarking') : Adapt.course.get('_bookmarking');
-            this.bookmarkLevel = bookmarkModel._level;
+        /**
+         * Calculates what the bookmarking 'level' will be for any given page.
+         * First sets a default using the course-level setting (or 'component' if that's not been set)
+         * then checks to see if that's being overridden at page level or not
+         * @param {Backbone.Model} pageModel The model for the current page view
+         * @return {String} Either 'page', 'block', or 'component' - with 'component' being the default
+         */
+        getBookmarkLevel: function(pageModel) {
+            var defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
+            var bookmarkModel = pageModel.get('_bookmarking');
+            var isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
+            return isInherit ? defaultLevel : bookmarkModel._level;
+        },
 
-            if (!bookmarkModel._isEnabled) {
+        /**
+         * Sets up bookmarking for the page the learner just navigated to
+         * If bookmarking is disabled for the current page, clear the stored bookmark and return.
+         * Otherwise, bookmark the page then - if necessary - set up to calculate which block or component
+         * should be bookmarked as the learner scrolls up/down the page
+         * @param {Backbone.View} pageView The current page view
+         */
+        setupPage: function (pageView) {
+            var pageBookmarkModel = pageView.model.get('_bookmarking');
+            if (pageBookmarkModel && pageBookmarkModel._isEnabled === false) {
                 this.resetLocationID();
                 return;
             }
 
             this.setLocationID(pageView.model.get('_id'));
 
+            this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
+            if (this.bookmarkLevel === 'page') {
+                return;
+            }
+
             this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel + 's').map(function(desc) {
                 return desc.get('_id');
             });
+
             this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
             this.listenToOnce(Adapt, 'remove', this.releaseViews);
+
             $(window).on('scroll', this._onScroll);
         },
 
