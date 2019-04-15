@@ -31,10 +31,21 @@
                 "_level": {
                   "type": "string",
                   "required": true,
-                  "enum": ["page", "block", "component"],
+                  "enum": [
+                    "page",
+                    "block",
+                    "component"
+                  ],
                   "default": "page",
                   "title": "Level",
-                  "inputType": {"type": "Select", "options":["page", "block", "component"]},
+                  "inputType": {
+                    "type": "Select",
+                    "options": [
+                      "page",
+                      "block",
+                      "component"
+                    ]
+                  },
                   "validators": ["required"],
                   "help": "Allows you to set whether Bookmarking is done at page, block or component level."
                 },
@@ -111,12 +122,25 @@
                 "_level": {
                   "type": "string",
                   "required": true,
-                  "enum": ["page", "block", "component"],
-                  "default": "page",
+                  "enum": [
+                    "inherit",
+                    "page",
+                    "block",
+                    "component"
+                  ],
+                  "default": "inherit",
                   "title": "Level",
-                  "inputType": {"type": "Select", "options":["page", "block", "component"]},
+                  "inputType": {
+                    "type": "Select",
+                    "options": [
+                      "inherit",
+                      "page",
+                      "block",
+                      "component"
+                    ]
+                  },
                   "validators": ["required"],
-                  "help": "Allows you to set whether Bookmarking is done at page, block or component level for this page of the course."
+                  "help": "Whether you want to inherit the 'Level' setting from Project settings or override it for this page of the course."
                 }
               }
             }

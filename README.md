@@ -46,7 +46,7 @@ The following attributes, set within *course.json*, configure the defaults for *
 
 >**_isEnabled** (boolean): Controls whether the bookmarking extension is enabled or not.
 
->**_level** (string): This value determines the type of view to which the learner is returned. Acceptable values are `"page"`, `"block"` or `"component"`. (The `_id` of the most recent view to trigger `inview` is used for routing.)
+>**_level** (string): This value determines which type of Adapt element will be stored as the learner's most current location in the course. Acceptable values are `"page"`, `"block"` or `"component"`. When set to `"block"` or `"component"`, the most recent one to scroll completely into the browser's viewport will be the one that is stored as the learner's current location.
 
 >**_showPrompt** (boolean): Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
 
@@ -69,7 +69,7 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 
 >**_isEnabled** (boolean): Set to `false` to disable bookmarking for the specified content object. 
 
->**_level** (string): This value determines the type of view to which the learner is returned. Acceptable values are `"page"`, `"block"` or `"component"`. (The `_id` of the most recent view to trigger `inview` is used for routing.)  
+>**_level** (string): Allows you to override the **\_level** setting defined in *course.json* with a setting specific to the contentObject. The same values are allowed here, along with an additional setting of `"inherit"` - though this setting is really intended for use by the Adapt Authoring Tool. If building directly in the Framework you can simply not include this property at contentObject level to achieve the same effect as a setting of `"inherit"`.
 
 <div float align=right><a href="#top">Back to Top</a></div>
 
@@ -79,8 +79,8 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 >**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
-**Version number:**  2.1.3   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
-**Framework versions:**  2.0.18+     
+**Version number:**  2.2.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
+**Framework versions:**  2.2+   
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)    
 **Accessibility support:** WAI AA   
 **RTL support:** yes  
