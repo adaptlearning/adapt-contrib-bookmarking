@@ -2,7 +2,7 @@
     "_bookmarking": {
         "_isEnabled": true,
         "_comment": "_level can be set to page, block, or component",
-        "_level": "block",
+        "_level": "page" | "block" | "component",
         "_showPrompt": true,
         "title": "Bookmarking",
         "body": "Would you like to continue where you left off?",
@@ -16,5 +16,5 @@
     "_bookmarking": {
         "_isEnabled": true,
         "_comment": "_level can be set to page, block, or component",
-        "_level": "block"
+        "_level": "inherit" | "page" | "block" | "component"
     }
