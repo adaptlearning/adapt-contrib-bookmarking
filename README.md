@@ -42,19 +42,19 @@ Visit the [**Bookmarking** wiki](https://github.com/adaptlearning/adapt-contrib-
 #### *course.json*  
 The following attributes, set within *course.json*, configure the defaults for **Bookmarking**.  
 
-**_bookmarking** (object): The bookmarking object that contains values for **_isEnabled**, **_level**, **_showPrompt**, **title**, **body**, and **_buttons**.
+**\_bookmarking** (object): The bookmarking object that contains values for **\_isEnabled**, **\_level**, **\_showPrompt**, **title**, **body**, and **\_buttons**.
 
->**_isEnabled** (boolean): Controls whether the bookmarking extension is enabled or not.
+>**\_isEnabled** (boolean): Controls whether the bookmarking extension is enabled or not.
 
->**_level** (string): This value determines which type of Adapt element will be stored as the learner's most current location in the course. Acceptable values are `"page"`, `"block"` or `"component"`. When set to `"block"` or `"component"`, the most recent one to scroll completely into the browser's viewport will be the one that is stored as the learner's current location.
+>**\_level** (string): This value determines which type of Adapt element will be stored as the learner's most current location in the course. Acceptable values are `"page"`, `"block"` or `"component"`. When set to `"block"` or `"component"`, the most recent one to scroll completely into the browser's viewport will be the one that is stored as the learner's current location.
 
->**_showPrompt** (boolean): Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
+>**\_showPrompt** (boolean): Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
 
 >**title** (string): Text that appears as the header of the prompt. 
 
 >**body** (string): Text that inquires whether the learner would like to return to where they left off in their last visit. 
 
->**_buttons** (object):  The buttons attribute group retains the labels to be used on the "yes" and "no" buttons. It contains values for **yes** and **no**.  
+>**\_buttons** (object):  The buttons attribute group retains the labels to be used on the "yes" and "no" buttons. It contains values for **yes** and **no**.  
 
 >>**yes** (string): This text labels the button that returns the learner to the point of their last visit.
 
@@ -65,9 +65,9 @@ The following attributes, set within *course.json*, configure the defaults for *
 #### *contentObjects.json*  
 The defaults set in *course.json* can be overridden for each contentObject of `"_type": "page"` by setting the following attributes in *contentObjects.json*.  
 
-**_bookmarking** (object): The Bookmarking object that contains values for **_isEnabled** and **_level**.
+**\_bookmarking** (object): The Bookmarking object that contains values for **\_isEnabled** and **\_level**.
 
->**_isEnabled** (boolean): Set to `false` to disable bookmarking for the specified content object. 
+>**\_isEnabled** (boolean): Set to `false` to disable bookmarking for the specified content object. 
 
 >**_level** (string): Allows you to override the **\_level** setting defined in *course.json* with a setting specific to the contentObject. The same values are allowed here, along with an additional setting of `"inherit"` - though this setting is really intended for use by the Adapt Authoring Tool. If building directly in the Framework you can simply not include this property at contentObject level to achieve the same effect as a setting of `"inherit"`.
 
@@ -79,9 +79,9 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 >**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
-**Version number:**  2.2.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
-**Framework versions:**  2.2+   
-**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)    
-**Accessibility support:** WAI AA   
-**RTL support:** yes  
-**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, IE10, IE9, IE8, IE Mobile 11, Safari 10+11 for macOS+iOS, Opera    
+**Version number:**  3.0.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Framework versions:**  5+  
+**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)  
+**Accessibility support:** WAI AA  
+**RTL support:** Yes  
+**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, IE10, IE9, IE8, IE Mobile 11, Safari 10+11 for macOS+iOS, Opera  
