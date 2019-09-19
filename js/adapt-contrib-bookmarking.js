@@ -97,11 +97,11 @@ define([
         return;
       }
 
-      $('.loading').show();
+      $('.js-loading').show();
       $('#a11y-focuser').focus();
       $('body').attr('aria-hidden', true);
       _.delay(function() {
-        $('.loading').hide();
+        $('.js-loading').hide();
         $('body').removeAttr('aria-hidden');
         Adapt.trigger('notify:prompt', promptObject);
       }, 3000);
