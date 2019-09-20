@@ -62,7 +62,7 @@ define([
           return;
         }
         this.showPrompt();
-        
+
       }.bind(this));
     },
 
@@ -124,13 +124,13 @@ define([
       this.setLocationID('');
     },
 
-    /*
+    /**
      * if the learner navigates to the top-level menu, clear the stored bookmark
      * if it's a sub-menu, store the menu's id as the bookmark
      */
     setupMenu: function(menuView) {
       var menuModel = menuView.model;
-      
+
       if (!menuModel.get('_parentId')) {
         this.resetLocationID();
         return;
@@ -165,8 +165,8 @@ define([
       if (pageBookmarkModel && pageBookmarkModel._isEnabled === false) {
         this.resetLocationID();
         return;
-      } 
-      
+      }
+
       this.setLocationID(pageView.model.get('_id'));
 
       this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
@@ -180,7 +180,7 @@ define([
 
       this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
       this.listenToOnce(Adapt, 'remove', this.releaseViews);
-      
+
       $(window).on('scroll', this._onScroll);
     },
 
