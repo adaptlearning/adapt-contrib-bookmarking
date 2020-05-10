@@ -108,9 +108,9 @@ define([
     },
 
     navigateToPrevious: function() {
-      _.defer(function() {
+      _.defer(async function() {
         var isSinglePage = Adapt.contentObjects.models.length == 1;
-        Backbone.history.navigate('#/id/' + this.restoredLocationID, {trigger: true, replace: isSinglePage});
+        await Adapt.navigateToElement('.' + this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
       }.bind(this));
 
       this.stopListening(Adapt, 'bookmarking:cancel');
