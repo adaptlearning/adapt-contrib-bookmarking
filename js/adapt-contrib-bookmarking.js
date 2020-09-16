@@ -78,6 +78,7 @@ define([
       var promptObject = {
         title: courseBookmarkModel.title,
         body: courseBookmarkModel.body,
+        _classes: 'is-bookmarking',
         _prompts:[
           {
             promptText: buttons.yes || 'Yes',
