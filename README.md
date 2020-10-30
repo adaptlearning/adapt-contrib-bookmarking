@@ -79,8 +79,8 @@ The defaults set in *course.json* can be overridden for each contentObject of `"
 >**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
-**Version number:**  3.0.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
-**Framework versions:**  5+  
+**Version number:**  3.1.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Framework versions:**  5.7+  
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)  
 **Accessibility support:** WAI AA  
 **RTL support:** Yes  
