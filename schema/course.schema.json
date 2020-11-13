@@ -1,0 +1,87 @@
+{
+  "$anchor": "bookmarking-course",
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "type": "object",
+  "$merge": {
+    "source": {
+      "$ref": "course"
+    },
+    "with": {
+      "properties": {
+        "_bookmarking": {
+          "type": "object",
+          "title": "Bookmarking",
+          "default": {},
+          "required": [
+            "_level"
+          ],
+          "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Is enabled",
+              "description": "Controls whether the Bookmarking extension is enabled or disabled.",
+              "default": true
+            },
+            "_level": {
+              "type": "string",
+              "title": "Level",
+              "description": "Allows you to set whether Bookmarking is done at page, block or component level.",
+              "default": "page",
+              "enum": [
+                "page",
+                "block",
+                "component"
+              ],
+              "_backboneForms": "Select"
+            },
+            "_showPrompt": {
+              "type": "boolean",
+              "title": "Show prompt",
+              "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically.",
+              "default": true
+            },
+            "title": {
+              "type": "string",
+              "title": "Prompt Title",
+              "default": "Bookmarking",
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "body": {
+              "type": "string",
+              "title": "Prompt Message",
+              "default": "Would you like to continue where you left off?",
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "_buttons": {
+              "type": "object",
+              "title": "Prompt Buttons",
+              "default": {},
+              "properties": {
+                "yes": {
+                  "type": "string",
+                  "title": "Yes",
+                  "default": "Yes",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "no": {
+                  "type": "string",
+                  "title": "No",
+                  "default": "No",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
