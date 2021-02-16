@@ -68,11 +68,9 @@ class Bookmarking extends Backbone.Controller {
   isAlreadyOnScreen(id) {
     if (id === Adapt.location._currentId) return true;
 
-    var model = Adapt.findById(id);
-    switch (model.getTypeGroup()) {
-      case 'menu':
-      case 'page':
-        return false;
+    var type = Adapt.findById(id).getTypeGroup();
+    if (type === 'menu' || type === 'page') {
+      return false;
     }
 
     var locationOnscreen = $('.' + id).onscreen();
