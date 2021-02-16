@@ -190,7 +190,6 @@ class Bookmarking extends Backbone.Controller {
   }
 
   setLocationID(id) {
-    if (!Adapt.offlineStorage) return;
     if (this.currentLocationID === id) return;
     Adapt.offlineStorage.set('location', id);
     this.currentLocationID = id;
