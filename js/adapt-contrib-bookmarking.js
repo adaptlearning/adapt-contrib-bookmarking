@@ -20,7 +20,6 @@ class Bookmarking extends Backbone.Controller {
   checkIsEnabled() {
     const courseBookmarkModel = Adapt.course.get('_bookmarking');
     if (!courseBookmarkModel || !courseBookmarkModel._isEnabled) return false;
-    if (!Adapt.offlineStorage) return false;
     return true;
   }
 
@@ -113,7 +112,7 @@ class Bookmarking extends Backbone.Controller {
 
   navigateToPrevious() {
     _.defer(async () => {
-      var isSinglePage = (Adapt.contentObjects.models.length === 1);
+      const isSinglePage = (Adapt.contentObjects.models.length === 1);
       await Adapt.router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
     });
 
