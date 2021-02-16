@@ -18,7 +18,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkIsEnabled() {
-    var courseBookmarkModel = Adapt.course.get('_bookmarking');
+    const courseBookmarkModel = Adapt.course.get('_bookmarking');
     if (!courseBookmarkModel || !courseBookmarkModel._isEnabled) return false;
     if (!Adapt.offlineStorage) return false;
     return true;
@@ -43,7 +43,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   restoreLocation() {
-    _.defer(function() {
+    _.defer(() => {
       this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
 
       if (this.isAlreadyOnScreen(this.restoredLocationID)) {
@@ -56,7 +56,7 @@ class Bookmarking extends Backbone.Controller {
       }
       this.showPrompt();
 
-    }.bind(this));
+    });
   }
 
   /**
@@ -68,14 +68,14 @@ class Bookmarking extends Backbone.Controller {
   isAlreadyOnScreen(id) {
     if (id === Adapt.location._currentId) return true;
 
-    var type = Adapt.findById(id).getTypeGroup();
+    const type = Adapt.findById(id).getTypeGroup();
     if (type === 'menu' || type === 'page') {
       return false;
     }
 
-    var locationOnscreen = $('.' + id).onscreen();
-    var isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
-    var isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
+    const locationOnscreen = $('.' + id).onscreen();
+    const isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
+    const isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
     if (isLocationOnscreen && isLocationFullyInview) {
       return true;
     }
@@ -84,18 +84,19 @@ class Bookmarking extends Backbone.Controller {
   }
 
   showPrompt() {
-    var courseBookmarkModel = Adapt.course.get('_bookmarking');
-    var buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
+    const courseBookmarkModel = Adapt.course.get('_bookmarking');
+    const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
 
     this.listenToOnce(Adapt, {
       'bookmarking:continue': this.navigateToPrevious,
       'bookmarking:cancel': this.navigateCancel
     });
 
-    var promptObject = {
+    Adapt.notify.prompt({
+      _classes: 'is-bookmarking',
+      _showIcon: true,
       title: courseBookmarkModel.title,
       body: courseBookmarkModel.body,
-      _classes: 'is-bookmarking',
       _prompts: [
         {
           promptText: buttons.yes || 'Yes',
@@ -105,18 +106,15 @@ class Bookmarking extends Backbone.Controller {
           promptText: buttons.no || 'No',
           _callbackEvent: 'bookmarking:cancel'
         }
-      ],
-      _showIcon: true
-    };
-
-    Adapt.notify.prompt(promptObject);
+      ]
+    });
   }
 
   navigateToPrevious() {
-    _.defer(async function() {
+    _.defer(async () => {
       var isSinglePage = (Adapt.contentObjects.models.length === 1);
       await Adapt.router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
-    }.bind(this));
+    });
 
     this.stopListening(Adapt, 'bookmarking:cancel');
   }
@@ -134,7 +132,7 @@ class Bookmarking extends Backbone.Controller {
    * if it's a sub-menu, store the menu's id as the bookmark
    */
   setupMenu(menuView) {
-    var menuModel = menuView.model;
+    const menuModel = menuView.model;
 
     if (!menuModel.get('_parentId')) {
       this.resetLocationID();
@@ -152,9 +150,9 @@ class Bookmarking extends Backbone.Controller {
    * @return {String} Either 'page', 'block', or 'component' - with 'component' being the default
    */
   getBookmarkLevel(pageModel) {
-    var defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
-    var bookmarkModel = pageModel.get('_bookmarking');
-    var isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
+    const defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const bookmarkModel = pageModel.get('_bookmarking');
+    const isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
     return isInherit ? defaultLevel : bookmarkModel._level;
   }
 
@@ -166,7 +164,7 @@ class Bookmarking extends Backbone.Controller {
    * @param {Backbone.View} pageView The current page view
    */
   setupPage(pageView) {
-    var pageBookmarkModel = pageView.model.get('_bookmarking');
+    const pageBookmarkModel = pageView.model.get('_bookmarking');
     if (pageBookmarkModel && pageBookmarkModel._isEnabled === false) {
       this.resetLocationID();
       return;
@@ -207,18 +205,18 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkLocation() {
-    var highestOnscreen = 0;
-    var highestOnscreenLocation = '';
+    let highestOnscreen = 0;
+    let highestOnscreenLocation = '';
 
-    for (var i = 0, l = this.watchViews.length; i < l; i++) {
-      var view = this.watchViews[i];
+    for (let i = 0, l = this.watchViews.length; i < l; i++) {
+      const view = this.watchViews[i];
 
-      var isViewAPageChild = (this.watchViewIds.indexOf(view.model.get('_id')) > -1);
+      const isViewAPageChild = (this.watchViewIds.indexOf(view.model.get('_id')) > -1);
 
       if (!isViewAPageChild) continue;
 
-      var element = $('.' + view.model.get('_id'));
-      var measurements = element.onscreen();
+      const element = $('.' + view.model.get('_id'));
+      const measurements = element.onscreen();
 
       if (!measurements.onscreen) continue;
       if (measurements.percentInview > highestOnscreen) {
