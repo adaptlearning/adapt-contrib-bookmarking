@@ -43,9 +43,9 @@ class Bookmarking extends Backbone.Controller {
   }
 
   restoreLocation() {
-    _.defer(() => {
-      this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
+    this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
 
+    _.delay(() => {
       if (this.isAlreadyOnScreen(this.restoredLocationID)) {
         return;
       }
@@ -54,9 +54,10 @@ class Bookmarking extends Backbone.Controller {
         this.navigateToPrevious();
         return;
       }
+
       this.showPrompt();
 
-    });
+    }, 500);// slight delay is necessary to allow any render & scrollTo to complete before calling isAlreadyOnScreen
   }
 
   /**
