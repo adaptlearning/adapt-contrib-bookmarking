@@ -4,8 +4,6 @@ class Bookmarking extends Backbone.Controller {
 
   initialize() {
     this.bookmarkLevel = null;
-    this.watchViewIds = null;
-    this.watchViews = [];
     this.restoredLocationID = null;
     this.currentLocationID = null;
     this.listenToOnce(Adapt, 'router:location', this.onAdaptInitialize);
@@ -177,16 +175,9 @@ class Bookmarking extends Backbone.Controller {
       return;
     }
 
-    this.watchViewIds = pageView.model.findDescendantModels(this.bookmarkLevel + 's').map(desc => desc.get('_id'));
-
-    this.listenTo(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
     this.listenToOnce(Adapt, 'remove', this.releaseViews);
 
     $(window).on('scroll', this._onScroll);
-  }
-
-  captureViews(view) {
-    this.watchViews.push(view);
   }
 
   setLocationID(id) {
@@ -196,33 +187,27 @@ class Bookmarking extends Backbone.Controller {
   }
 
   releaseViews() {
-    this.watchViews.length = 0;
-    this.watchViewIds.length = 0;
     this.stopListening(Adapt, 'remove', this.releaseViews);
-    this.stopListening(Adapt, this.bookmarkLevel + 'View:postRender', this.captureViews);
     $(window).off('scroll', this._onScroll);
   }
 
   checkLocation() {
+    if (!this.currentLocationID) return;
+    const currentModel = Adapt.findById(this.currentLocationID);
+    if (!currentModel) return;
+    const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel + 's').map(desc => desc.get('_id'));
+
     let highestOnscreen = 0;
     let highestOnscreenLocation = '';
-
-    for (let i = 0, l = this.watchViews.length; i < l; i++) {
-      const view = this.watchViews[i];
-
-      const isViewAPageChild = (this.watchViewIds.indexOf(view.model.get('_id')) > -1);
-
-      if (!isViewAPageChild) continue;
-
-      const element = $('.' + view.model.get('_id'));
+    possibleViewIds.forEach(id => {
+      const element = $(`[data-adapt-id=${id}]`);
+      if (!element.length) return;
       const measurements = element.onscreen();
-
-      if (!measurements.onscreen) continue;
-      if (measurements.percentInview > highestOnscreen) {
-        highestOnscreen = measurements.percentInview;
-        highestOnscreenLocation = view.model.get('_id');
-      }
-    }
+      if (!measurements.onscreen) return;
+      if (measurements.percentInview <= highestOnscreen) return;
+      highestOnscreen = measurements.percentInview;
+      highestOnscreenLocation = id;
+    });
 
     // set location as most inview component
     if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
