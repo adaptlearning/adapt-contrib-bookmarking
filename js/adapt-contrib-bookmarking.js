@@ -192,7 +192,6 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkLocation() {
-    if (!this.currentLocationID) return;
     const currentModel = Adapt.location._currentModel;
     if (!currentModel) return;
     const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel + 's').map(desc => desc.get('_id'));
