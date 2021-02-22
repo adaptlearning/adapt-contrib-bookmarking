@@ -6,6 +6,7 @@ class Bookmarking extends Backbone.Controller {
     this.bookmarkLevel = null;
     this.restoredLocationID = null;
     this.currentLocationID = null;
+    this.currentContentObjectId = null;
     this.listenToOnce(Adapt, 'router:location', this.onAdaptInitialize);
   }
 
@@ -123,6 +124,7 @@ class Bookmarking extends Backbone.Controller {
 
   resetLocationID() {
     this.setLocationID('');
+    this.currentContentObjectId = '';
   }
 
   /**
@@ -137,7 +139,8 @@ class Bookmarking extends Backbone.Controller {
       return;
     }
 
-    this.setLocationID(menuModel.get('_id'));
+    this.currentContentObjectId = menuModel.get('_id');
+    this.setLocationID(this.currentContentObjectId);
   }
 
   /**
@@ -168,7 +171,8 @@ class Bookmarking extends Backbone.Controller {
       return;
     }
 
-    this.setLocationID(pageView.model.get('_id'));
+    this.currentContentObjectId = pageView.model.get('_id');
+    this.setLocationID(this.currentContentObjectId);
 
     this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
     if (this.bookmarkLevel === 'page') {
@@ -193,7 +197,7 @@ class Bookmarking extends Backbone.Controller {
 
   checkLocation() {
     if (!this.currentLocationID) return;
-    const currentModel = Adapt.findById(this.currentLocationID);
+    const currentModel = Adapt.findById(this.currentContentObjectId);
     if (!currentModel) return;
     const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel + 's').map(desc => desc.get('_id'));
 
