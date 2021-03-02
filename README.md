@@ -92,7 +92,7 @@ Allows you to override the **\_level** setting defined in *course.json* with a s
 <div float align=right><a href="#top">Back to Top</a></div>
 
 ## Limitations
-**Bookmarking** only works if [**Spoor**](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being presented in a learning management system (LMS). 
+**Bookmarking** only works if the [spoor plugin](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being launched from an <abbr title="Learning Management System">LMS</abbr> OR the xAPI plugin is enabled and the course is connected to an <abbr title="Learning Record Store">LRS</abbr>.  
 >**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
