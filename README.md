@@ -93,10 +93,11 @@ Allows you to override the **\_level** setting defined in *course.json* with a s
 
 ## Limitations
 **Bookmarking** only works if the [spoor plugin](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being launched from an <abbr title="Learning Management System">LMS</abbr> OR the xAPI plugin is enabled and the course is connected to an <abbr title="Learning Record Store">LRS</abbr>.  
->**Note:** **Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
+
+>**Note: Bookmarking** will work without an LMS if run via scorm_test_harness as explained in https://github.com/adaptlearning/adapt-contrib-spoor#client-local-storage--fake-lms--adapt-lms-behaviour-testing. However, this is intended only for development, not for production.
 
 ----------------------------
-**Version number:**  3.2.0   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Version number:**  3.2.1   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
 **Framework versions:**  5.8+  
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-bookmarking/graphs/contributors)  
 **Accessibility support:** WAI AA  
