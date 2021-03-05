@@ -18,15 +18,15 @@
           "properties": {
             "_isEnabled": {
               "type": "boolean",
-              "title": "Is enabled",
-              "description": "Controls whether the Bookmarking extension is enabled or disabled.",
+              "title": "Enable Bookmarking",
+              "description": "Controls whether the Bookmarking extension is enabled or disabled",
               "default": true
             },
             "_level": {
               "type": "string",
               "title": "Level",
-              "description": "Allows you to set whether Bookmarking is done at page, block or component level.",
-              "default": "page",
+              "description": "Allows you to set whether Bookmarking is done at page, block or component level",
+              "default": "component",
               "enum": [
                 "page",
                 "block",
@@ -36,13 +36,13 @@
             },
             "_showPrompt": {
               "type": "boolean",
-              "title": "Show prompt",
-              "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically.",
+              "title": "Enable prompt",
+              "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically",
               "default": true
             },
             "title": {
               "type": "string",
-              "title": "Prompt Title",
+              "title": "Prompt title",
               "default": "Bookmarking",
               "_adapt": {
                 "translatable": true
@@ -50,7 +50,7 @@
             },
             "body": {
               "type": "string",
-              "title": "Prompt Message",
+              "title": "Prompt body",
               "default": "Would you like to continue where you left off?",
               "_adapt": {
                 "translatable": true
@@ -58,12 +58,12 @@
             },
             "_buttons": {
               "type": "object",
-              "title": "Prompt Buttons",
+              "title": "Prompt buttons",
               "default": {},
               "properties": {
                 "yes": {
                   "type": "string",
-                  "title": "Yes",
+                  "title": "Confirm button text",
                   "default": "Yes",
                   "_adapt": {
                     "translatable": true
@@ -71,7 +71,7 @@
                 },
                 "no": {
                   "type": "string",
-                  "title": "No",
+                  "title": "Cancel button text",
                   "default": "No",
                   "_adapt": {
                     "translatable": true

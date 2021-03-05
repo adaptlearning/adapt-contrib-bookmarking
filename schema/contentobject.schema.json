@@ -18,14 +18,14 @@
           "properties": {
             "_isEnabled": {
               "type": "boolean",
-              "title": "Is enabled",
-              "description": "Controls whether Bookmarking is enabled or disabled for this page of the course.",
+              "title": "Enable Bookmarking",
+              "description": "Controls whether Bookmarking is enabled or disabled for this page of the course",
               "default": true
             },
             "_level": {
               "type": "string",
               "title": "Level",
-              "description": "Whether you want to inherit the 'Level' setting from Project settings or override it for this page of the course.",
+              "description": "Whether you want to inherit the 'Level' setting from Project settings or override it for this page of the course",
               "default": "inherit",
               "enum": [
                 "inherit",
