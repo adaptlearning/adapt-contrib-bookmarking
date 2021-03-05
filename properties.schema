@@ -36,7 +36,7 @@
                     "block",
                     "component"
                   ],
-                  "default": "page",
+                  "default": "component",
                   "title": "Level",
                   "inputType": {
                     "type": "Select",
