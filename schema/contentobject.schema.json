@@ -1,0 +1,43 @@
+{
+  "$anchor": "bookmarking-contentobject",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "contentobject"
+    },
+    "with": {
+      "properties": {
+        "_bookmarking": {
+          "type": "object",
+          "title": "Bookmarking",
+          "default": {},
+          "required": [
+            "_level"
+          ],
+          "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Enable Bookmarking",
+              "description": "Controls whether Bookmarking is enabled or disabled for this page of the course",
+              "default": true
+            },
+            "_level": {
+              "type": "string",
+              "title": "Level",
+              "description": "Whether you want to inherit the 'Level' setting from Project settings or override it for this page of the course",
+              "default": "inherit",
+              "enum": [
+                "inherit",
+                "page",
+                "block",
+                "component"
+              ],
+              "_backboneForms": "Select"
+            }
+          }
+        }
+      }
+    }
+  }
+}

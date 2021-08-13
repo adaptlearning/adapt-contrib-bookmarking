@@ -1,0 +1,87 @@
+{
+  "$anchor": "bookmarking-course",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "course"
+    },
+    "with": {
+      "properties": {
+        "_bookmarking": {
+          "type": "object",
+          "title": "Bookmarking",
+          "default": {},
+          "required": [
+            "_level"
+          ],
+          "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Enable Bookmarking",
+              "description": "Controls whether the Bookmarking extension is enabled or disabled",
+              "default": true
+            },
+            "_level": {
+              "type": "string",
+              "title": "Level",
+              "description": "Allows you to set whether Bookmarking is done at page, block or component level",
+              "default": "component",
+              "enum": [
+                "page",
+                "block",
+                "component"
+              ],
+              "_backboneForms": "Select"
+            },
+            "_showPrompt": {
+              "type": "boolean",
+              "title": "Enable prompt",
+              "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically",
+              "default": true
+            },
+            "title": {
+              "type": "string",
+              "title": "Prompt title",
+              "default": "Bookmarking",
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "body": {
+              "type": "string",
+              "title": "Prompt body",
+              "default": "Would you like to continue where you left off?",
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "_buttons": {
+              "type": "object",
+              "title": "Prompt buttons",
+              "default": {},
+              "properties": {
+                "yes": {
+                  "type": "string",
+                  "title": "Confirm button text",
+                  "default": "Yes",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "no": {
+                  "type": "string",
+                  "title": "Cancel button text",
+                  "default": "No",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
