@@ -3,7 +3,7 @@
   "version": "3.3.0",
   "framework": ">=5.8",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-bookmarking",
-  "issues": "https://github.com/adaptlearning/adapt_framework/issues/new",
+  "bugs": "https://github.com/adaptlearning/adapt-contrib-bookmarking/issues",
   "extension" : "bookmarking",
   "displayName" : "Bookmarking",
   "description": "An extension that tracks the learner's location in the course so that it can return them to that location in a subsequent session",
