@@ -195,7 +195,7 @@ class Bookmarking extends Backbone.Controller {
   checkLocation() {
     const currentModel = Adapt.location._currentModel;
     if (!currentModel) return;
-    const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel + 's')
+    const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel)
       .filter(desc => desc.get('_isTrackable') !== false) // Filter trickle buttons
       .map(desc => desc.get('_id'));
 
