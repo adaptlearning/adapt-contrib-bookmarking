@@ -22,10 +22,11 @@ class Bookmarking extends Backbone.Controller {
   }
 
   setupEventListeners() {
-    this._onScroll = _.debounce(this.checkLocation.bind(this), 1000);
+    this._onScroll = _.debounce(this.checkLocation.bind(this), 250);
     this.listenTo(Adapt, {
       'menuView:ready': this.setupMenu,
-      'pageView:preRender': this.setupPage
+      'pageView:preRender': this.setupPage,
+      'view:childAdded': this.checkLocation
     });
   }
 
@@ -194,7 +195,9 @@ class Bookmarking extends Backbone.Controller {
   checkLocation() {
     const currentModel = Adapt.location._currentModel;
     if (!currentModel) return;
-    const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel + 's').map(desc => desc.get('_id'));
+    const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel)
+      .filter(desc => desc.get('_isTrackable') !== false) // Filter trickle buttons
+      .map(desc => desc.get('_id'));
 
     let highestOnscreen = 0;
     let highestOnscreenLocation = '';
