@@ -1,4 +1,5 @@
 import Adapt from 'core/js/adapt';
+import logging from 'core/js/logging';
 
 class Bookmarking extends Backbone.Controller {
 
@@ -112,7 +113,11 @@ class Bookmarking extends Backbone.Controller {
   navigateToPrevious() {
     _.defer(async () => {
       const isSinglePage = (Adapt.contentObjects.models.length === 1);
-      await Adapt.router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
+      try {
+        await Adapt.router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
+      } catch (err) {
+        logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
+      }
     });
 
     this.stopListening(Adapt, 'bookmarking:cancel');
