@@ -11,12 +11,12 @@ class Bookmarking extends Backbone.Controller {
   }
 
   onAdaptInitialize() {
-    if (!this.checkIsEnabled()) return;
+    if (!this.checkCourseIsEnabled()) return;
     this.setupEventListeners();
     this.checkRestoreLocation();
   }
 
-  checkIsEnabled() {
+  checkCourseIsEnabled() {
     const courseBookmarkModel = Adapt.course.get('_bookmarking');
     if (!courseBookmarkModel || !courseBookmarkModel._isEnabled) return false;
     return true;
@@ -169,7 +169,7 @@ class Bookmarking extends Backbone.Controller {
    */
   setupPage(pageView) {
     const pageBookmarkModel = pageView.model.get('_bookmarking');
-    if (pageBookmarkModel && pageBookmarkModel._isEnabled === false) {
+    if (pageBookmarkModel?._isEnabled === false) {
       this.resetLocationID();
       return;
     }
@@ -198,8 +198,13 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkLocation() {
+    const contentObjectBookmarkModel = Adapt.parentView?.model?.get('_bookmarking');
+    if (contentObjectBookmarkModel?._isEnabled === false) {
+      this.resetLocationID();
+      return;
+    }
     const currentModel = Adapt.location._currentModel;
-    if (!currentModel) return;
+    if (!currentModel || !this.bookmarkLevel) return;
     const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel)
       .filter(desc => desc.get('_isTrackable') !== false) // Filter trickle buttons
       .map(desc => desc.get('_id'));
