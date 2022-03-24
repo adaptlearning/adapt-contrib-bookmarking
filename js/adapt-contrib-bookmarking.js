@@ -1,5 +1,10 @@
 import Adapt from 'core/js/adapt';
+import offlineStorage from 'core/js/offlineStorage';
 import logging from 'core/js/logging';
+import location from 'core/js/location';
+import router from 'core/js/router';
+import notify from 'core/js/notify';
+import data from 'core/js/data';
 
 class Bookmarking extends Backbone.Controller {
 
@@ -32,9 +37,9 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkRestoreLocation() {
-    this.restoredLocationID = Adapt.offlineStorage.get('location');
+    this.restoredLocationID = offlineStorage.get('location');
 
-    if (!this.restoredLocationID || this.restoredLocationID === 'undefined' || !Adapt.findById(this.restoredLocationID)) {
+    if (!this.restoredLocationID || this.restoredLocationID === 'undefined' || !data.findById(this.restoredLocationID)) {
       return;
     }
 
@@ -66,9 +71,9 @@ class Bookmarking extends Backbone.Controller {
    * @return {boolean}
    */
   isAlreadyOnScreen(id) {
-    if (id === Adapt.location._currentId) return true;
+    if (id === location._currentId) return true;
 
-    const type = Adapt.findById(id).getTypeGroup();
+    const type = data.findById(id).getTypeGroup();
     if (type === 'menu' || type === 'page') {
       return false;
     }
@@ -92,7 +97,7 @@ class Bookmarking extends Backbone.Controller {
       'bookmarking:cancel': this.navigateCancel
     });
 
-    Adapt.notify.prompt({
+    notify.prompt({
       _classes: 'is-bookmarking',
       _showIcon: true,
       title: courseBookmarkModel.title,
@@ -114,7 +119,7 @@ class Bookmarking extends Backbone.Controller {
     _.defer(async () => {
       const isSinglePage = (Adapt.contentObjects.models.length === 1);
       try {
-        await Adapt.router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
+        await router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
         logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
       }
@@ -188,7 +193,7 @@ class Bookmarking extends Backbone.Controller {
 
   setLocationID(id) {
     if (this.currentLocationID === id) return;
-    Adapt.offlineStorage.set('location', id);
+    offlineStorage.set('location', id);
     this.currentLocationID = id;
   }
 
@@ -203,7 +208,7 @@ class Bookmarking extends Backbone.Controller {
       this.resetLocationID();
       return;
     }
-    const currentModel = Adapt.location._currentModel;
+    const currentModel = location._currentModel;
     if (!currentModel || !this.bookmarkLevel) return;
     const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel)
       .filter(desc => desc.get('_isTrackable') !== false) // Filter trickle buttons
