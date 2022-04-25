@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-bookmarking",
-  "version": "3.3.3",
+  "version": "4.0.0",
   "framework": ">=5.19.1",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-bookmarking",
   "bugs": "https://github.com/adaptlearning/adapt-contrib-bookmarking/issues",
