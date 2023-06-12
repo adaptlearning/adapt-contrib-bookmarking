@@ -28,39 +28,31 @@ class Bookmarking extends Backbone.Controller {
   }
 
   setupEventListeners() {
-    this._onScroll = _.debounce(this.checkLocation.bind(this), 250);
+    this._onInview = this.onInview.bind(this);
+    this._debouncedCheckLocation = _.debounce(this.checkLocation.bind(this), 250);
     this.listenTo(Adapt, {
       'menuView:ready': this.setupMenu,
       'pageView:preRender': this.setupPage,
-      'view:childAdded': this.checkLocation
+      'view:childAdded': this.onChildViewAdded,
+      'view:preRemove': this.onChildViewPreRemove
     });
   }
 
   checkRestoreLocation() {
     this.restoredLocationID = offlineStorage.get('location');
-
-    if (!this.restoredLocationID || this.restoredLocationID === 'undefined' || !data.findById(this.restoredLocationID)) {
-      return;
-    }
-
+    if (!this.restoredLocationID || this.restoredLocationID === 'undefined' || !data.findById(this.restoredLocationID)) return;
     this.listenToOnce(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
   }
 
   restoreLocation() {
     this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
-
     _.delay(() => {
-      if (this.isAlreadyOnScreen(this.restoredLocationID)) {
-        return;
-      }
-
+      if (this.isAlreadyOnScreen(this.restoredLocationID)) return;
       if (Adapt.course.get('_bookmarking')._showPrompt === false) {
         this.navigateToPrevious();
         return;
       }
-
       this.showPrompt();
-
     }, 500);// slight delay is necessary to allow any render & scrollTo to complete before calling isAlreadyOnScreen
   }
 
@@ -72,31 +64,21 @@ class Bookmarking extends Backbone.Controller {
    */
   isAlreadyOnScreen(id) {
     if (id === location._currentId) return true;
-
     const type = data.findById(id).getTypeGroup();
-    if (type === 'menu' || type === 'page') {
-      return false;
-    }
-
-    const locationOnscreen = $('.' + id).onscreen();
-    const isLocationOnscreen = locationOnscreen && (locationOnscreen.percentInview > 0);
-    const isLocationFullyInview = locationOnscreen && (locationOnscreen.percentInview === 100);
-    if (isLocationOnscreen && isLocationFullyInview) {
-      return true;
-    }
-
-    return false;
+    if (type === 'menu' || type === 'page') return false;
+    const measurements = $(`.${id}`).onscreen();
+    const isLocationOnscreen = measurements?.onscreen ?? false;
+    const isLocationFullyInview = (measurements?.percentInview === 100) ?? false;
+    return isLocationOnscreen && isLocationFullyInview;
   }
 
   showPrompt() {
     const courseBookmarkModel = Adapt.course.get('_bookmarking');
     const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
-
     this.listenToOnce(Adapt, {
       'bookmarking:continue': this.navigateToPrevious,
       'bookmarking:cancel': this.navigateCancel
     });
-
     notify.prompt({
       _classes: 'is-bookmarking',
       _showIcon: true,
@@ -124,7 +106,6 @@ class Bookmarking extends Backbone.Controller {
         logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
       }
     });
-
     this.stopListening(Adapt, 'bookmarking:cancel');
   }
 
@@ -142,12 +123,10 @@ class Bookmarking extends Backbone.Controller {
    */
   setupMenu(menuView) {
     const menuModel = menuView.model;
-
     if (!menuModel.get('_parentId')) {
       this.resetLocationID();
       return;
     }
-
     this.setLocationID(menuModel.get('_id'));
   }
 
@@ -178,28 +157,15 @@ class Bookmarking extends Backbone.Controller {
       this.resetLocationID();
       return;
     }
-
     this.setLocationID(pageView.model.get('_id'));
-
     this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
-    if (this.bookmarkLevel === 'page') {
-      return;
-    }
-
-    this.listenToOnce(Adapt, 'remove', this.releaseViews);
-
-    $(window).on('scroll', this._onScroll);
+    if (this.bookmarkLevel === 'page') return;
   }
 
   setLocationID(id) {
     if (this.currentLocationID === id) return;
     offlineStorage.set('location', id);
     this.currentLocationID = id;
-  }
-
-  releaseViews() {
-    this.stopListening(Adapt, 'remove', this.releaseViews);
-    $(window).off('scroll', this._onScroll);
   }
 
   checkLocation() {
@@ -213,7 +179,6 @@ class Bookmarking extends Backbone.Controller {
     const possibleViewIds = currentModel.findDescendantModels(this.bookmarkLevel)
       .filter(desc => desc.get('_isTrackable') !== false) // Filter trickle buttons
       .map(desc => desc.get('_id'));
-
     let highestOnscreen = 0;
     let highestOnscreenLocation = '';
     possibleViewIds.forEach(id => {
@@ -225,10 +190,25 @@ class Bookmarking extends Backbone.Controller {
       highestOnscreen = measurements.percentInview;
       highestOnscreenLocation = id;
     });
-
     // set location as most inview component
     if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
   }
+
+  onChildViewAdded(view, childView) {
+    if (!this.bookmarkLevel || !childView.model.isTypeGroup(this.bookmarkLevel)) return;
+    childView.$el.on('inview', this._onInview);
+  }
+
+  onChildViewPreRemove(childView) {
+    if (!this.bookmarkLevel || !childView.model.isTypeGroup(this.bookmarkLevel)) return;
+    childView.$el.off('inview', this._onInview);
+  }
+
+  onInview(event, visible) {
+    if (!visible) return;
+    this._debouncedCheckLocation();
+  }
+
 }
 
 export default new Bookmarking();
