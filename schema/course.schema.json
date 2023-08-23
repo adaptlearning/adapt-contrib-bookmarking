@@ -34,6 +34,17 @@
               ],
               "_backboneForms": "Select"
             },
+            "_location": {
+              "type": "string",
+              "title": "Location",
+              "description": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will work best in a course with linear progression.",
+              "default": "previous",
+              "enum": [
+                "previous",
+                "furthest"
+              ],
+              "_backboneForms": "Select"
+            },
             "_showPrompt": {
               "type": "boolean",
               "title": "Enable prompt",

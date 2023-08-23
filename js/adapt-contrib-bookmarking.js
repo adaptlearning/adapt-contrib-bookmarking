@@ -5,6 +5,14 @@ import location from 'core/js/location';
 import router from 'core/js/router';
 import notify from 'core/js/notify';
 import data from 'core/js/data';
+import BookmarkingModel from './BookmarkingModel';
+import BookmarkingView from './BookmarkingView';
+import documentModifications from 'core/js/DOMElementModifications';
+
+// Allow self-closing <bookmarking-resume /> in any compiled json attribute, displayTitle, body, instruction, etc
+const selfClosingCustomTag = /<((bookmarking)[^>]*)\/>/gi;
+const o2 = Handlebars.compile;
+Handlebars.compile = html => o2(html.replace(selfClosingCustomTag, '<$1></$2>'));
 
 class Bookmarking extends Backbone.Controller {
 
@@ -13,6 +21,14 @@ class Bookmarking extends Backbone.Controller {
     this.restoredLocationID = null;
     this.currentLocationID = null;
     this.listenToOnce(Adapt, 'router:location', this.onAdaptInitialize);
+  }
+
+  get config() {
+    return Adapt.course.get('_bookmarking');
+  }
+
+  get isEnabled() {
+    return Boolean(this.config?._isEnabled);
   }
 
   onAdaptInitialize() {
@@ -34,8 +50,34 @@ class Bookmarking extends Backbone.Controller {
       'menuView:ready': this.setupMenu,
       'pageView:preRender': this.setupPage,
       'view:childAdded': this.onChildViewAdded,
-      'view:preRemove': this.onChildViewPreRemove
+      'view:preRemove': this.onChildViewPreRemove,
+      'bookmarking:resume': this.navigateToFurthest
     });
+    this.listenTo(documentModifications, {
+      'added:bookmarking': this.onAdd,
+      'removed:div.bookmarking': this.onRemove
+    });
+  }
+
+  onAdd(event) {
+    if (!this.isEnabled) return;
+    const $target = $(event.target);
+    const model = new BookmarkingModel({
+      label: $target.attr('label') || null,
+      ariaLabel: $target.attr('aria-label') || null
+    });
+    const view = new BookmarkingView({
+      model
+    });
+    view.el._view = view;
+    $target.replaceWith(view.$el);
+  }
+
+  onRemove(event) {
+    if (!this.isEnabled) return;
+    const view = event.target._view;
+    view.remove();
+    delete view.el._view;
   }
 
   checkRestoreLocation() {
@@ -49,7 +91,7 @@ class Bookmarking extends Backbone.Controller {
     _.delay(() => {
       if (this.isAlreadyOnScreen(this.restoredLocationID)) return;
       if (Adapt.course.get('_bookmarking')._showPrompt === false) {
-        this.navigateToPrevious();
+        this.navigateTo();
         return;
       }
       this.showPrompt();
@@ -76,7 +118,7 @@ class Bookmarking extends Backbone.Controller {
     const courseBookmarkModel = Adapt.course.get('_bookmarking');
     const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
     this.listenToOnce(Adapt, {
-      'bookmarking:continue': this.navigateToPrevious,
+      'bookmarking:continue': this.navigateTo,
       'bookmarking:cancel': this.navigateCancel
     });
     notify.prompt({
@@ -97,6 +139,20 @@ class Bookmarking extends Backbone.Controller {
     });
   }
 
+  navigateTo() {
+    const locationConfig = this.config._location;
+    switch (locationConfig) {
+      case 'previous': {
+        this.navigateToPrevious();
+        break;
+      }
+      case 'furthest': {
+        this.navigateToFurthest();
+        break;
+      }
+    }
+  }
+
   navigateToPrevious() {
     _.defer(async () => {
       const isSinglePage = (Adapt.contentObjects.models.length === 1);
@@ -107,6 +163,19 @@ class Bookmarking extends Backbone.Controller {
       }
     });
     this.stopListening(Adapt, 'bookmarking:cancel');
+  }
+
+  navigateToFurthest() {
+    const furthestModel = this.checkFurthestIncompleteModel();
+    const furthestId = furthestModel.attributes._id;
+
+    _.defer(async () => {
+      try {
+        await router.navigateToElement(furthestId, { trigger: true, duration: 400 });
+      } catch (err) {
+        logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
+      }
+    });
   }
 
   navigateCancel() {
@@ -159,7 +228,6 @@ class Bookmarking extends Backbone.Controller {
     }
     this.setLocationID(pageView.model.get('_id'));
     this.bookmarkLevel = this.getBookmarkLevel(pageView.model);
-    if (this.bookmarkLevel === 'page') return;
   }
 
   setLocationID(id) {
@@ -192,6 +260,13 @@ class Bookmarking extends Backbone.Controller {
     });
     // set location as most inview component
     if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
+  }
+
+  checkFurthestIncompleteModel() {
+    const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
+    const furthestIncompleteModel = getIncompleteModels.at(0);
+    return furthestIncompleteModel;
   }
 
   onChildViewAdded(view, childView) {
