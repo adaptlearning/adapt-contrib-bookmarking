@@ -57,6 +57,9 @@ Controls whether the bookmarking extension is enabled or not.
 ##### \_level (string):
 This value determines which type of Adapt element will be stored as the learner's most current location in the course. Acceptable values are `"page"`, `"block"` or `"component"`. When set to `"block"` or `"component"`, the most recent one to scroll completely into the browser's viewport will be the one that is stored as the learner's current location. The default value is `"component"`.
 
+##### \_location (string):
+This value determines where learners will be taken to upon resume. `"previous"` will take leaners back to their last visited location. `"furthest"` will take learners to their furthest incomplete location. The furthest option will pair best in a course experience with linear progression.
+
 ##### \_showPrompt (boolean):
 Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
 
