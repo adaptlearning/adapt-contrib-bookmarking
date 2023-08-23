@@ -91,13 +91,15 @@ Allows you to override the **\_level** setting defined in *course.json* with a s
 
 <div float align=right><a href="#top">Back to Top</a></div>
 
-## Custom Element Tags
+## Unique Element Tags
 The bookmarking plug-in allows you to place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc). This button will route learners to their furtest point of progress.
 ```json
 {
   "body": "<bookmarking label='Resume' aria-label='Navigate to your furthest point of progress.' />",
 }
 ```
+
+<div float align=right><a href="#top">Back to Top</a></div>
 
 ## Limitations
 **Bookmarking** only works if the [spoor plugin](https://github.com/adaptlearning/adapt-contrib-spoor) is enabled and the course is being launched from an <abbr title="Learning Management System">LMS</abbr> OR the xAPI plugin is enabled and the course is connected to an <abbr title="Learning Record Store">LRS</abbr>.
