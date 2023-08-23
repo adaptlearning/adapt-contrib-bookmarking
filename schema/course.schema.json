@@ -37,7 +37,7 @@
             "_location": {
               "type": "string",
               "title": "Location",
-              "description": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will work best in a course with linear progression.",
+              "description": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will pair best in a course with linear progression.",
               "default": "previous",
               "enum": [
                 "previous",
