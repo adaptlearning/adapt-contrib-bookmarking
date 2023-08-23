@@ -66,7 +66,7 @@
                     ]
                   },
                   "validators": ["required"],
-                  "help": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will work best in a course with linear progression."
+                  "help": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will pair best in a course with linear progression."
                 },
                 "_showPrompt": {
                   "type": "boolean",
