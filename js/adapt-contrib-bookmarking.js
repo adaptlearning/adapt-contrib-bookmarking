@@ -140,7 +140,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   navigateTo() {
-    const locationConfig = this.config._location;
+    const locationConfig = this.config._location || 'previous';
     switch (locationConfig) {
       case 'previous': {
         this.navigateToPrevious();
