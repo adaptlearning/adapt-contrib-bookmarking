@@ -63,7 +63,7 @@ class Bookmarking extends Backbone.Controller {
     if (!this.isEnabled) return;
     const $target = $(event.target);
     const model = new BookmarkingModel({
-      label: $target.attr('label') || null,
+      label: $target.attr('label') || $target.html() || null,
       ariaLabel: $target.attr('aria-label') || null
     });
     const view = new BookmarkingView({
