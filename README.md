@@ -100,6 +100,9 @@ The bookmarking plug-in allows you to place a button in any compiled json field 
 {
   "body": "<bookmarking label='Resume' aria-label='Navigate to your furthest point of progress.' />",
 }
+{
+  "instruction": "<bookmarking aria-label='Navigate to your furthest point of progress.'>Resume</bookmarking>",
+}
 ```
 
 <div float align=right><a href="#top">Back to Top</a></div>
