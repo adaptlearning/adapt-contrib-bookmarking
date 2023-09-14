@@ -262,7 +262,7 @@ class Bookmarking extends Backbone.Controller {
     if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
   }
 
-  checkFurthestIncompleteModel() {
+  get furthestIncompleteModel() {
     const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
     const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
     const furthestIncompleteModel = getIncompleteModels.at(0);
