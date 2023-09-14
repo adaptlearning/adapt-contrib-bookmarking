@@ -23,3 +23,4 @@
 
     // Unique element tag placement. Place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc)
     "body": "<bookmarking label='Resume' aria-label='Navigate to your furthest point of progress.' />",
+    "body": "<bookmarking aria-label='Navigate to your furthest point of progress.'>Resume</bookmarking>",
