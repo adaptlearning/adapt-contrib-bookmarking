@@ -8,6 +8,7 @@ export default function Bookmarking(props) {
   return (
     <div className="bookmarking-resume__inner">
       <button
+        type='button'
         className='btn-text bookmarking-resume__button js-bookmarking-resume-button'
         aria-label={ariaLabel} >
         {label}
