@@ -166,8 +166,8 @@ class Bookmarking extends Backbone.Controller {
   }
 
   navigateToFurthest() {
-    const furthestModel = this.checkFurthestIncompleteModel();
-    const furthestId = furthestModel.attributes._id;
+    const furthestModel = this.furthestIncompleteModel;
+    const furthestId = furthestModel.get('_id');
 
     _.defer(async () => {
       try {
