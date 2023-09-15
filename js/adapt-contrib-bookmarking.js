@@ -9,7 +9,7 @@ import BookmarkingModel from './BookmarkingModel';
 import BookmarkingView from './BookmarkingView';
 import documentModifications from 'core/js/DOMElementModifications';
 
-// Allow self-closing <bookmarking-resume /> in any compiled json attribute, displayTitle, body, instruction, etc
+// Allow self-closing <bookmarking /> in any compiled json attribute, displayTitle, body, instruction, etc
 const selfClosingCustomTag = /<((bookmarking)[^>]*)\/>/gi;
 const o2 = Handlebars.compile;
 Handlebars.compile = html => o2(html.replace(selfClosingCustomTag, '<$1></$2>'));
