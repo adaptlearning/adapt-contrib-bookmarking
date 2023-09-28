@@ -9,7 +9,7 @@ import BookmarkingModel from './BookmarkingModel';
 import BookmarkingView from './BookmarkingView';
 import documentModifications from 'core/js/DOMElementModifications';
 
-// Allow self-closing <bookmarking /> in any compiled json attribute, displayTitle, body, instruction, etc
+// Allow self-closing <bookmarking-resume /> in any compiled json attribute, displayTitle, body, instruction, etc
 const selfClosingCustomTag = /<((bookmarking)[^>]*)\/>/gi;
 const o2 = Handlebars.compile;
 Handlebars.compile = html => o2(html.replace(selfClosingCustomTag, '<$1></$2>'));
@@ -21,6 +21,10 @@ class Bookmarking extends Backbone.Controller {
     this.restoredLocationID = null;
     this.currentLocationID = null;
     this.listenToOnce(Adapt, 'router:location', this.onAdaptInitialize);
+  }
+
+  get globals() {
+    return Adapt.course.get('_globals');
   }
 
   get config() {
@@ -61,15 +65,17 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    const $target = $(event.target);
+    const resumeLabel = this.globals._accessibility.bookmarkingResumeText;
+    const resumeAria = this.globals._accessibility._ariaLabels.resume;
+    console.log(resumeLabel, resumeAria);
+    const $target = $(event.target);//
     const model = new BookmarkingModel({
-      label: $target.attr('label') || $target.html() || null,
-      ariaLabel: $target.attr('aria-label') || null
+      label: $target.attr('label') || resumeLabel || $target.html() || null,
+      ariaLabel: $target.attr('aria-label') || resumeAria || null
     });
     const view = new BookmarkingView({
       model
     });
-    view.el._view = view;
     $target.replaceWith(view.$el);
   }
 
@@ -140,7 +146,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   navigateTo() {
-    const locationConfig = this.config._location || 'previous';
+    const locationConfig = this.config._location;
     switch (locationConfig) {
       case 'previous': {
         this.navigateToPrevious();
