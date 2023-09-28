@@ -95,13 +95,11 @@ Allows you to override the **\_level** setting defined in *course.json* with a s
 <div float align=right><a href="#top">Back to Top</a></div>
 
 ## Unique Element Tags
-The bookmarking plug-in allows you to place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc). This button will route learners to their furtest point of progress. Attributes allowed within the tag include a `label` & `ariaLabel` to be set on each button.
+The bookmarking plug-in allows you to place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc). This button will route learners to their furtest point of progress. Additionally, you may use attributes to alter the default labels in course.json.
 ```json
 {
-  "body": "<bookmarking label='Resume' aria-label='Navigate to your furthest point of progress.' />",
-}
-{
-  "instruction": "<bookmarking aria-label='Navigate to your furthest point of progress.'>Resume</bookmarking>",
+  "body": "<bookmarking />",
+  "body": "<bookmarking label='Resume course' aria-label='Navigate to your furthest point of progress.' />",
 }
 ```
 
