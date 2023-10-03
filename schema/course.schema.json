@@ -7,6 +7,48 @@
       "$ref": "course"
     },
     "with": {
+      "_globals": {
+        "type": "object",
+        "title": "Globals",
+        "default": {},
+        "properties": {
+          "_accessibility": {
+            "type": "object",
+            "title": "Accessibility",
+            "default": {},
+            "required": [
+              "resumeButtonLabel"
+            ],
+            "properties": {
+              "resumeButtonLabel": {
+                "type": "string",
+                "title": "Resume button label",
+                "description": "Unique element tag label for resume button.",
+                "default": "Resume",
+                "_adapt": {
+                  "translatable": true
+                }
+              },
+              "_ariaLabels": {
+                "type": "object",
+                "title": "ARIA labels",
+                "default": {},
+                "properties": {
+                  "resumeButtonAriaLabel": {
+                    "type": "string",
+                    "title": "Resume ARIA label",
+                    "description": "Unique element tag ARIA label for resume button.",
+                    "default": "Navigate to your furthest point of progress.",
+                    "_adapt": {
+                      "translatable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "properties": {
         "_bookmarking": {
           "type": "object",
