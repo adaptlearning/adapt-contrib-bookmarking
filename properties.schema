@@ -3,6 +3,26 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
   "required": false,
+  "globals": {
+    "resumeButtonLabel": {
+      "type": "string",
+      "required": true,
+      "default": "Resume",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true,
+      "help": "Unique element tag label for resume button."
+    },
+    "resumeButtonAriaLabel": {
+      "type": "string",
+      "required": true,
+      "default": "Navigate to your furthest point of progress.",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true,
+      "help": "Unique element tag ARIA label for resume button."
+    }
+  },
   "properties": {
     "pluginLocations": {
       "type": "object",
