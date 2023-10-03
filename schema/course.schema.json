@@ -7,49 +7,44 @@
       "$ref": "course"
     },
     "with": {
-      "_globals": {
-        "type": "object",
-        "title": "Globals",
-        "default": {},
-        "properties": {
-          "_accessibility": {
-            "type": "object",
-            "title": "Accessibility",
-            "default": {},
-            "required": [
-              "resumeButtonLabel"
-            ],
-            "properties": {
-              "resumeButtonLabel": {
-                "type": "string",
-                "title": "Resume button label",
-                "description": "Unique element tag label for resume button.",
-                "default": "Resume",
-                "_adapt": {
-                  "translatable": true
-                }
-              },
-              "_ariaLabels": {
-                "type": "object",
-                "title": "ARIA labels",
-                "default": {},
-                "properties": {
-                  "resumeButtonAriaLabel": {
-                    "type": "string",
-                    "title": "Resume ARIA label",
-                    "description": "Unique element tag ARIA label for resume button.",
-                    "default": "Navigate to your furthest point of progress.",
-                    "_adapt": {
-                      "translatable": true
+      "properties": {
+        "_globals": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "_extensions": {
+              "type": "object",
+              "default": {},
+              "properties": {
+                "_bookmarking": {
+                  "type": "object",
+                  "title": "Bookmarking",
+                  "default": {},
+                  "properties": {
+                    "resumeButtonLabel": {
+                      "type": "string",
+                      "title": "Resume button label",
+                      "description": "Label for ubiquitous resume button.",
+                      "default": "Resume",
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    },
+                    "resumeButtonAriaLabel": {
+                      "type": "string",
+                      "title": "Resume ARIA label",
+                      "description": "ARIA label for ubiquitous resume button.",
+                      "default": "Navigate to your furthest point of progress.",
+                      "_adapt": {
+                        "translatable": true
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
-      },
-      "properties": {
+        },
         "_bookmarking": {
           "type": "object",
           "title": "Bookmarking",
