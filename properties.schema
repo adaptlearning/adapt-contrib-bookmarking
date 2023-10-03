@@ -11,7 +11,7 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true,
-      "help": "Unique element tag label for resume button."
+      "help": "Label for ubiquitous resume button."
     },
     "resumeButtonAriaLabel": {
       "type": "string",
@@ -20,7 +20,7 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true,
-      "help": "Unique element tag ARIA label for resume button."
+      "help": "ARIA label for ubiquitous resume button."
     }
   },
   "properties": {
