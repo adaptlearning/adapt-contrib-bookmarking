@@ -65,8 +65,8 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    const resumeLabel = this.globals._accessibility.bookmarkingResumeText;
-    const resumeAria = this.globals._accessibility._ariaLabels.resume;
+    const resumeLabel = this.globals._extensions._bookmarking.resumeButtonLabel;
+    const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
     console.log(resumeLabel, resumeAria);
     const $target = $(event.target);//
     const model = new BookmarkingModel({
