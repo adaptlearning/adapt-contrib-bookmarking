@@ -21,9 +21,9 @@
                   "title": "Bookmarking",
                   "default": {},
                   "properties": {
-                    "resumeButtonLabel": {
+                    "resumeButtonText": {
                       "type": "string",
-                      "title": "Resume button label",
+                      "title": "Resume button text",
                       "default": "Resume",
                       "_adapt": {
                         "translatable": true
