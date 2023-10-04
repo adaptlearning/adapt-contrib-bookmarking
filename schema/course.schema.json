@@ -24,7 +24,6 @@
                     "resumeButtonLabel": {
                       "type": "string",
                       "title": "Resume button label",
-                      "description": "Label for ubiquitous resume button.",
                       "default": "Resume",
                       "_adapt": {
                         "translatable": true
