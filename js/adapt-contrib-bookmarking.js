@@ -35,6 +35,21 @@ class Bookmarking extends Backbone.Controller {
     return Boolean(this.config?._isEnabled);
   }
 
+  get navigateToId() {
+    const locationConfig = this.config._location || 'previous';
+    const navigateToId = (locationConfig === 'furthest')
+      ? this.furthestIncompleteModel.get('_id')
+      : this.restoredLocationID;
+    return navigateToId;
+  }
+
+  get furthestIncompleteModel() {
+    const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
+    const furthestIncompleteModel = getIncompleteModels.at(0);
+    return furthestIncompleteModel;
+  }
+
   onAdaptInitialize() {
     if (!this.checkCourseIsEnabled()) return;
     this.setupEventListeners();
@@ -65,9 +80,10 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    const resumeLabel = this.globals._extensions._bookmarking.resumeButtonLabel;
+    const resumeLabel = this.globals._extensions._bookmarking.resumeButtonText;
     const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
-    const $target = $(event.target);
+    console.log(resumeLabel, resumeAria);
+    const $target = $(event.target);//
     const model = new BookmarkingModel({
       label: $target.attr('label') || resumeLabel || $target.html() || null,
       ariaLabel: $target.attr('aria-label') || resumeAria || null
@@ -145,42 +161,16 @@ class Bookmarking extends Backbone.Controller {
   }
 
   navigateTo() {
-    const locationConfig = this.config._location;
-    switch (locationConfig) {
-      case 'previous': {
-        this.navigateToPrevious();
-        break;
-      }
-      case 'furthest': {
-        this.navigateToFurthest();
-        break;
-      }
-    }
-  }
-
-  navigateToPrevious() {
+    const navigateToId = this.navigateToId;
     _.defer(async () => {
-      const isSinglePage = (Adapt.contentObjects.models.length === 1);
       try {
-        await router.navigateToElement(this.restoredLocationID, { trigger: true, replace: isSinglePage, duration: 400 });
+        const isSinglePage = (Adapt.contentObjects.models.length === 1);
+        await router.navigateToElement(navigateToId, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
-        logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
+        logging.warn(`Bookmarking cannot navigate to id: ${navigateToId}\n`, err);
       }
     });
     this.stopListening(Adapt, 'bookmarking:cancel');
-  }
-
-  navigateToFurthest() {
-    const furthestModel = this.furthestIncompleteModel;
-    const furthestId = furthestModel.get('_id');
-
-    _.defer(async () => {
-      try {
-        await router.navigateToElement(furthestId, { trigger: true, duration: 400 });
-      } catch (err) {
-        logging.warn(`Bookmarking cannot navigate to id: ${this.restoredLocationID}\n`, err);
-      }
-    });
   }
 
   navigateCancel() {
@@ -265,13 +255,6 @@ class Bookmarking extends Backbone.Controller {
     });
     // set location as most inview component
     if (highestOnscreenLocation) this.setLocationID(highestOnscreenLocation);
-  }
-
-  get furthestIncompleteModel() {
-    const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
-    const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
-    const furthestIncompleteModel = getIncompleteModels.at(0);
-    return furthestIncompleteModel;
   }
 
   onChildViewAdded(view, childView) {
