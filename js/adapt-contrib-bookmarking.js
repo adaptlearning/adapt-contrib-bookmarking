@@ -67,7 +67,7 @@ class Bookmarking extends Backbone.Controller {
     if (!this.isEnabled) return;
     const resumeLabel = this.globals._extensions._bookmarking.resumeButtonLabel;
     const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
-    const $target = $(event.target);//
+    const $target = $(event.target);
     const model = new BookmarkingModel({
       label: $target.attr('label') || resumeLabel || $target.html() || null,
       ariaLabel: $target.attr('aria-label') || resumeAria || null
