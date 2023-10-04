@@ -19,7 +19,6 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true,
-      "help": "ARIA label for ubiquitous resume button."
     }
   },
   "properties": {
