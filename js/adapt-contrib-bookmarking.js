@@ -37,10 +37,15 @@ class Bookmarking extends Backbone.Controller {
 
   get navigateToId() {
     const locationConfig = this.config._location || 'previous';
-    const navigateToId = (locationConfig === 'furthest')
-      ? this.furthestIncompleteModel.get('_id')
-      : this.restoredLocationID;
-    return navigateToId;
+    if (locationConfig === 'furthest') {
+      if (typeof this.furthestIncompleteModel === 'undefined') {
+        return this.restoredLocationID;
+      } else {
+        return this.furthestIncompleteModel.get('_id');
+      }
+    } else {
+      return this.restoredLocationID;
+    }
   }
 
   get furthestIncompleteModel() {
@@ -79,11 +84,10 @@ class Bookmarking extends Backbone.Controller {
   }
 
   onAdd(event) {
-    if (!this.isEnabled) return;
+    if (!this.isEnabled || !this.furthestIncompleteModel) return;
     const resumeLabel = this.globals._extensions._bookmarking.resumeButtonText;
     const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
-    console.log(resumeLabel, resumeAria);
-    const $target = $(event.target);//
+    const $target = $(event.target);
     const model = new BookmarkingModel({
       label: $target.attr('label') || resumeLabel || $target.html() || null,
       ariaLabel: $target.attr('aria-label') || resumeAria || null
