@@ -4,21 +4,23 @@
   "id": "http://jsonschema.net",
   "required": false,
   "globals": {
-    "resumeButtonLabel": {
+    "resumeButtonText": {
       "type": "string",
       "required": true,
+      "title": "Resume button text",
       "default": "Resume",
       "inputType": "Text",
       "validators": [],
-      "translatable": true,
+      "translatable": true
     },
     "resumeButtonAriaLabel": {
       "type": "string",
       "required": true,
+      "title": "Resume ARIA label",
       "default": "Navigate to your furthest point of progress.",
       "inputType": "Text",
       "validators": [],
-      "translatable": true,
+      "translatable": true
     }
   },
   "properties": {
