@@ -55,7 +55,7 @@ class Bookmarking extends Backbone.Controller {
       'pageView:preRender': this.setupPage,
       'view:childAdded': this.onChildViewAdded,
       'view:preRemove': this.onChildViewPreRemove,
-      'bookmarking:resume': this.navigateToFurthest
+      'bookmarking:resume': this.navigateTo
     });
     this.listenTo(documentModifications, {
       'added:bookmarking': this.onAdd,
