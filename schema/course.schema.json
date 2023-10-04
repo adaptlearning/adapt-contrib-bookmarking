@@ -32,7 +32,6 @@
                     "resumeButtonAriaLabel": {
                       "type": "string",
                       "title": "Resume ARIA label",
-                      "description": "ARIA label for ubiquitous resume button.",
                       "default": "Navigate to your furthest point of progress.",
                       "_adapt": {
                         "translatable": true
