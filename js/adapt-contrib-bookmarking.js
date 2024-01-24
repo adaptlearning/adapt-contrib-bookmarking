@@ -47,6 +47,7 @@ class Bookmarking extends Backbone.Controller {
     const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
     const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
     const furthestIncompleteModel = getIncompleteModels.at(0);
+    console.log(Views.currentBlockView.$el);
     return furthestIncompleteModel;
   }
 
@@ -80,13 +81,16 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    if (this.config._location !== 'furthest' || !this.furthestIncompleteModel) return;
     const resumeLabel = this.globals._extensions._bookmarking.resumeButtonText;
     const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
     const $target = $(event.target);
+    const isDisabled = (this.navigateToId === '' || this.navigateToId === undefined || this.navigateToId === 'current')
+      ? 'is-disabled'
+      : '';
     const model = new BookmarkingModel({
       label: $target.attr('label') || resumeLabel || $target.html() || null,
-      ariaLabel: $target.attr('aria-label') || resumeAria || null
+      ariaLabel: $target.attr('aria-label') || resumeAria || null,
+      isDisabled
     });
     const view = new BookmarkingView({
       model
