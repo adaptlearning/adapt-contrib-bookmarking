@@ -61,7 +61,7 @@
                 "title": {
                   "type": "string",
                   "default": "Bookmarking",
-                  "required": false,
+                  "required": true,
                   "title": "Prompt Title",
                   "inputType": "Text",
                   "validators": [],
