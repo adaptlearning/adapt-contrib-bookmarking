@@ -48,7 +48,8 @@
           "title": "Bookmarking",
           "default": {},
           "required": [
-            "_level"
+            "_level",
+            "title"
           ],
           "properties": {
             "_isEnabled": {
