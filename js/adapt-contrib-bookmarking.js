@@ -31,16 +31,19 @@ class Bookmarking extends Backbone.Controller {
     return Adapt.course.get('_bookmarking');
   }
 
+  get location() {
+    return this.config._location || 'previous';
+  }
+
   get isEnabled() {
     return Boolean(this.config?._isEnabled);
   }
 
-  get navigateToId() {
-    const locationConfig = this.config._location || 'previous';
-    const navigateToId = (locationConfig === 'furthest')
+  getLocationId(location = this.location) {
+    const id = (location === 'furthest')
       ? this.furthestIncompleteModel.get('_id')
       : this.restoredLocationID;
-    return navigateToId;
+    return id;
   }
 
   get furthestIncompleteModel() {
@@ -80,15 +83,20 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    const resumeLabel = this.globals._extensions._bookmarking.resumeButtonText;
-    const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
+    const {
+      resumeButtonText,
+      resumeButtonAriaLabel
+    } = this.globals._extensions._bookmarking;
     const $target = $(event.target);
-    const isDisabled = (this.navigateToId === '' || this.navigateToId === undefined || this.navigateToId === 'current')
-      ? 'is-disabled'
-      : '';
+    const label = $target.attr('label') || $target.html() || resumeButtonText  || null;
+    const ariaLabel =  $target.attr('aria-label') || resumeButtonAriaLabel || null;
+    const _location = $target.attr('location') || this.location;
+    const id = this.getLocationId(_location);
+    const isDisabled = ['', undefined, 'current'].includes(id);
     const model = new BookmarkingModel({
-      label: $target.attr('label') || resumeLabel || $target.html() || null,
-      ariaLabel: $target.attr('aria-label') || resumeAria || null,
+      label,
+      ariaLabel,
+      _location,
       isDisabled
     });
     const view = new BookmarkingView({
@@ -163,14 +171,14 @@ class Bookmarking extends Backbone.Controller {
     });
   }
 
-  navigateTo() {
-    const navigateToId = this.navigateToId;
+  navigateTo(location = this.location) {
+    const id = this.getLocationId(location);
     _.defer(async () => {
       try {
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
-        await router.navigateToElement(navigateToId, { trigger: true, replace: isSinglePage, duration: 400 });
+        await router.navigateToElement(id, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
-        logging.warn(`Bookmarking cannot navigate to id: ${navigateToId}\n`, err);
+        logging.warn(`Bookmarking cannot navigate to id: ${id}\n`, err);
       }
     });
     this.stopListening(Adapt, 'bookmarking:cancel');

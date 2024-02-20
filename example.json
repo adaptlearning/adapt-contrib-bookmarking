@@ -24,4 +24,4 @@
     // Unique element tag placement. Place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc)
     "body": "<bookmarking />",
     // Attribute labels that override course.json
-    "body": "<bookmarking label='Resume course' aria-label='Navigate to your furthest point of progress.' />",
+    "body": "<bookmarking location='furthest' label='Resume course' aria-label='Navigate to your furthest point of progress.' />",

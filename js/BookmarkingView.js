@@ -42,6 +42,6 @@ export default class BookmarkingView extends Backbone.View {
   }
 
   onResumeClicked() {
-    Adapt.trigger('bookmarking:resume');
+    Adapt.trigger('bookmarking:resume', this.model.get('_location'));
   }
 }
