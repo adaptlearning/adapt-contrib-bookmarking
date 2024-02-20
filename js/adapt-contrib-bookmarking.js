@@ -148,8 +148,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   showPrompt() {
-    const courseBookmarkModel = this.config;
-    const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
+    const buttons = this.config._buttons || { yes: 'Yes', no: 'No' };
     this.listenToOnce(Adapt, {
       'bookmarking:continue': this.navigateTo,
       'bookmarking:cancel': this.navigateCancel
@@ -157,8 +156,8 @@ class Bookmarking extends Backbone.Controller {
     notify.prompt({
       _classes: 'is-bookmarking',
       _showIcon: true,
-      title: courseBookmarkModel.title,
-      body: courseBookmarkModel.body,
+      title: this.config.title,
+      body: this.config.body,
       _prompts: [
         {
           promptText: buttons.yes || 'Yes',
