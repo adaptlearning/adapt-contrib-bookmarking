@@ -47,7 +47,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   get furthestIncompleteModel() {
-    const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const bookmarkLevel = this.config._level || 'component';
     const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
     const furthestIncompleteModel = getIncompleteModels.at(0);
     return furthestIncompleteModel;
@@ -60,7 +60,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkCourseIsEnabled() {
-    const courseBookmarkModel = Adapt.course.get('_bookmarking');
+    const courseBookmarkModel = this.config;
     if (!courseBookmarkModel || !courseBookmarkModel._isEnabled) return false;
     return true;
   }
@@ -121,8 +121,9 @@ class Bookmarking extends Backbone.Controller {
   restoreLocation() {
     this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
     _.delay(() => {
+      if (this.config._autoRestore === false) return;
       if (this.isAlreadyOnScreen(this.restoredLocationID)) return;
-      if (Adapt.course.get('_bookmarking')._showPrompt === false) {
+      if (this.config._showPrompt === false) {
         this.navigateTo();
         return;
       }
@@ -147,7 +148,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   showPrompt() {
-    const courseBookmarkModel = Adapt.course.get('_bookmarking');
+    const courseBookmarkModel = this.config;
     const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
     this.listenToOnce(Adapt, {
       'bookmarking:continue': this.navigateTo,
@@ -213,7 +214,7 @@ class Bookmarking extends Backbone.Controller {
    * @return {String} Either 'page', 'block', or 'component' - with 'component' being the default
    */
   getBookmarkLevel(pageModel) {
-    const defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const defaultLevel = this.config._level || 'component';
     const bookmarkModel = pageModel.get('_bookmarking');
     const isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
     return isInherit ? defaultLevel : bookmarkModel._level;

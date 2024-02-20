@@ -6,6 +6,7 @@
         "_comment": "_location can be set to previous or furthest",
         "_location": "previous",
         "_showPrompt": true,
+        "_autoRestore": true,
         "title": "Bookmarking",
         "body": "Would you like to continue where you left off?",
         "_buttons": {
