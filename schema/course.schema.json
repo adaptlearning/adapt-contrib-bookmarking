@@ -8,6 +8,41 @@
     },
     "with": {
       "properties": {
+        "_globals": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "_extensions": {
+              "type": "object",
+              "default": {},
+              "properties": {
+                "_bookmarking": {
+                  "type": "object",
+                  "title": "Bookmarking",
+                  "default": {},
+                  "properties": {
+                    "resumeButtonText": {
+                      "type": "string",
+                      "title": "Resume button text",
+                      "default": "Resume",
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    },
+                    "resumeButtonAriaLabel": {
+                      "type": "string",
+                      "title": "Resume ARIA label",
+                      "default": "Navigate to your furthest point of progress.",
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "_bookmarking": {
           "type": "object",
           "title": "Bookmarking",
@@ -35,10 +70,27 @@
               ],
               "_backboneForms": "Select"
             },
+            "_location": {
+              "type": "string",
+              "title": "Location",
+              "description": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will pair best in a course with linear progression.",
+              "default": "previous",
+              "enum": [
+                "previous",
+                "furthest"
+              ],
+              "_backboneForms": "Select"
+            },
             "_showPrompt": {
               "type": "boolean",
               "title": "Enable prompt",
               "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically",
+              "default": true
+            },
+            "_autoRestore": {
+              "type": "boolean",
+              "title": "Auto restore",
+              "description": "Controls whether the Bookmarking will automatically restore if the prompt is disabled. If not enabled, the user will be not be automatically returned to their bookmarked position.",
               "default": true
             },
             "title": {

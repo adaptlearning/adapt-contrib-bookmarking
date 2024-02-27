@@ -3,6 +3,26 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
   "required": false,
+  "globals": {
+    "resumeButtonText": {
+      "type": "string",
+      "required": true,
+      "title": "Resume button text",
+      "default": "Resume",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true
+    },
+    "resumeButtonAriaLabel": {
+      "type": "string",
+      "required": true,
+      "title": "Resume ARIA label",
+      "default": "Navigate to your furthest point of progress.",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true
+    }
+  },
   "properties": {
     "pluginLocations": {
       "type": "object",
@@ -49,6 +69,25 @@
                   "validators": ["required"],
                   "help": "Allows you to set whether Bookmarking is done at page, block or component level."
                 },
+                "_location": {
+                  "type": "string",
+                  "required": true,
+                  "enum": [
+                    "previous",
+                    "furthest"
+                  ],
+                  "default": "previous",
+                  "title": "Location",
+                  "inputType": {
+                    "type": "Select",
+                    "options": [
+                      "previous",
+                      "furthest"
+                    ]
+                  },
+                  "validators": ["required"],
+                  "help": "Allows you to set whether Bookmarking takes learners back to their last previously visited location or your furthest incomplete location. The furthest option will pair best in a course with linear progression."
+                },
                 "_showPrompt": {
                   "type": "boolean",
                   "required": true,
@@ -57,6 +96,15 @@
                   "inputType": "Checkbox",
                   "validators": [],
                   "help": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically."
+                },
+                "_autoRestore": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": true,
+                  "title": "Auto restore",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Controls whether the Bookmarking will automatically restore if the prompt is disabled. If not enabled, the user will be not be automatically returned to their bookmarked position."
                 },
                 "title": {
                   "type": "string",
