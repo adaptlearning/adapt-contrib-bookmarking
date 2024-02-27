@@ -63,6 +63,9 @@ This value determines where learners will be taken to upon resume. `"previous"` 
 ##### \_showPrompt (boolean):
 Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
 
+##### \_autoRestore (boolean):
+Controls whether the Bookmarking will automatically restore if the prompt is disabled. If not enabled, the user will be not be automatically returned to their bookmarked position. The default is `true`.
+
 ##### title (string):
 Text that appears as the header of the prompt.
 
