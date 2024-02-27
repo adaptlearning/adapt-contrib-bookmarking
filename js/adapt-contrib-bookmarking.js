@@ -31,20 +31,23 @@ class Bookmarking extends Backbone.Controller {
     return Adapt.course.get('_bookmarking');
   }
 
+  get location() {
+    return this.config._location || 'previous';
+  }
+
   get isEnabled() {
     return Boolean(this.config?._isEnabled);
   }
 
-  get navigateToId() {
-    const locationConfig = this.config._location || 'previous';
-    const navigateToId = (locationConfig === 'furthest')
+  getLocationId(location = this.location) {
+    const id = (location === 'furthest')
       ? this.furthestIncompleteModel.get('_id')
       : this.restoredLocationID;
-    return navigateToId;
+    return id;
   }
 
   get furthestIncompleteModel() {
-    const bookmarkLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const bookmarkLevel = this.config._level || 'component';
     const getIncompleteModels = Adapt.course.findDescendantModels(bookmarkLevel, { where: { _isComplete: false, _isAvailable: true, _isOptional: false } });
     const furthestIncompleteModel = getIncompleteModels.at(0);
     return furthestIncompleteModel;
@@ -57,7 +60,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   checkCourseIsEnabled() {
-    const courseBookmarkModel = Adapt.course.get('_bookmarking');
+    const courseBookmarkModel = this.config;
     if (!courseBookmarkModel || !courseBookmarkModel._isEnabled) return false;
     return true;
   }
@@ -80,15 +83,20 @@ class Bookmarking extends Backbone.Controller {
 
   onAdd(event) {
     if (!this.isEnabled) return;
-    const resumeLabel = this.globals._extensions._bookmarking.resumeButtonText;
-    const resumeAria = this.globals._extensions._bookmarking.resumeButtonAriaLabel;
+    const {
+      resumeButtonText,
+      resumeButtonAriaLabel
+    } = this.globals._extensions._bookmarking;
     const $target = $(event.target);
-    const isDisabled = (this.navigateToId === '' || this.navigateToId === undefined || this.navigateToId === 'current')
-      ? 'is-disabled'
-      : '';
+    const label = $target.attr('label') || $target.html() || resumeButtonText  || null;
+    const ariaLabel =  $target.attr('aria-label') || resumeButtonAriaLabel || null;
+    const _location = $target.attr('location') || this.location;
+    const id = this.getLocationId(_location);
+    const isDisabled = ['', undefined, 'current'].includes(id);
     const model = new BookmarkingModel({
-      label: $target.attr('label') || resumeLabel || $target.html() || null,
-      ariaLabel: $target.attr('aria-label') || resumeAria || null,
+      label,
+      ariaLabel,
+      _location,
       isDisabled
     });
     const view = new BookmarkingView({
@@ -113,8 +121,9 @@ class Bookmarking extends Backbone.Controller {
   restoreLocation() {
     this.stopListening(Adapt, 'pageView:ready menuView:ready', this.restoreLocation);
     _.delay(() => {
+      if (this.config._autoRestore === false) return;
       if (this.isAlreadyOnScreen(this.restoredLocationID)) return;
-      if (Adapt.course.get('_bookmarking')._showPrompt === false) {
+      if (this.config._showPrompt === false) {
         this.navigateTo();
         return;
       }
@@ -139,8 +148,7 @@ class Bookmarking extends Backbone.Controller {
   }
 
   showPrompt() {
-    const courseBookmarkModel = Adapt.course.get('_bookmarking');
-    const buttons = courseBookmarkModel._buttons || { yes: 'Yes', no: 'No' };
+    const buttons = this.config._buttons || { yes: 'Yes', no: 'No' };
     this.listenToOnce(Adapt, {
       'bookmarking:continue': this.navigateTo,
       'bookmarking:cancel': this.navigateCancel
@@ -148,8 +156,8 @@ class Bookmarking extends Backbone.Controller {
     notify.prompt({
       _classes: 'is-bookmarking',
       _showIcon: true,
-      title: courseBookmarkModel.title,
-      body: courseBookmarkModel.body,
+      title: this.config.title,
+      body: this.config.body,
       _prompts: [
         {
           promptText: buttons.yes || 'Yes',
@@ -163,14 +171,14 @@ class Bookmarking extends Backbone.Controller {
     });
   }
 
-  navigateTo() {
-    const navigateToId = this.navigateToId;
+  navigateTo(location = this.location) {
+    const id = this.getLocationId(location);
     _.defer(async () => {
       try {
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
-        await router.navigateToElement(navigateToId, { trigger: true, replace: isSinglePage, duration: 400 });
+        await router.navigateToElement(id, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
-        logging.warn(`Bookmarking cannot navigate to id: ${navigateToId}\n`, err);
+        logging.warn(`Bookmarking cannot navigate to id: ${id}\n`, err);
       }
     });
     this.stopListening(Adapt, 'bookmarking:cancel');
@@ -205,7 +213,7 @@ class Bookmarking extends Backbone.Controller {
    * @return {String} Either 'page', 'block', or 'component' - with 'component' being the default
    */
   getBookmarkLevel(pageModel) {
-    const defaultLevel = Adapt.course.get('_bookmarking')._level || 'component';
+    const defaultLevel = this.config._level || 'component';
     const bookmarkModel = pageModel.get('_bookmarking');
     const isInherit = !bookmarkModel || !bookmarkModel._level || bookmarkModel._level === 'inherit';
     return isInherit ? defaultLevel : bookmarkModel._level;

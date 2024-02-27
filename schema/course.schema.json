@@ -87,6 +87,12 @@
               "description": "Controls whether the Bookmarking prompt is enabled or disabled. If not enabled, the user will be returned to their bookmarked position automatically",
               "default": true
             },
+            "_autoRestore": {
+              "type": "boolean",
+              "title": "Auto restore",
+              "description": "Controls whether the Bookmarking will automatically restore if the prompt is disabled. If not enabled, the user will be not be automatically returned to their bookmarked position.",
+              "default": true
+            },
             "title": {
               "type": "string",
               "title": "Prompt title",

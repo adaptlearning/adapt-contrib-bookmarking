@@ -13,7 +13,7 @@ export default function Bookmarking(props) {
         type='button'
         className={classes([
           'btn-text bookmarking-resume__button js-bookmarking-resume-button',
-          isDisabled
+          isDisabled && 'is-disabled'
         ])}
         aria-disabled={isDisabled || null}
         aria-label={ariaLabel} >
