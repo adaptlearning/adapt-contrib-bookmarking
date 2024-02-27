@@ -41,7 +41,7 @@ class Bookmarking extends Backbone.Controller {
 
   getLocationId(location = this.location) {
     const id = (location === 'furthest')
-      ? this.furthestIncompleteModel.get('_id')
+      ? this.furthestIncompleteModel?.get?.('_id')
       : this.restoredLocationID;
     return id;
   }
@@ -173,6 +173,7 @@ class Bookmarking extends Backbone.Controller {
 
   navigateTo(location = this.location) {
     const id = this.getLocationId(location);
+    if (['', undefined, 'current'].includes(id)) return;
     _.defer(async () => {
       try {
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
