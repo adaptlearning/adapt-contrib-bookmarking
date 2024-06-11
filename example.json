@@ -3,7 +3,10 @@
         "_isEnabled": true,
         "_comment": "_level can be set to page, block, or component",
         "_level": "page",
+        "_comment": "_location can be set to previous or furthest",
+        "_location": "previous",
         "_showPrompt": true,
+        "_autoRestore": true,
         "title": "Bookmarking",
         "body": "Would you like to continue where you left off?",
         "_buttons": {
@@ -18,3 +21,9 @@
         "_comment": "_level can be set to inherit, page, block, or component",
         "_level": "inherit"
     }
+
+    // Unique element tag placement. Place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc)
+    "body": "<bookmarking />",
+    // Attribute labels that override course.json
+    "body": "<bookmarking location='previous' label='Resume' aria-label='Continue where you left off.' />",
+    "body": "<bookmarking location='furthest' label='Continue' aria-label='Navigate to your furthest point of progress.' />",

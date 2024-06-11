@@ -57,8 +57,14 @@ Controls whether the bookmarking extension is enabled or not.
 ##### \_level (string):
 This value determines which type of Adapt element will be stored as the learner's most current location in the course. Acceptable values are `"page"`, `"block"` or `"component"`. When set to `"block"` or `"component"`, the most recent one to scroll completely into the browser's viewport will be the one that is stored as the learner's current location. The default value is `"component"`.
 
+##### \_location (string):
+This value determines where learners will be taken to upon resume. `"previous"` will take leaners back to their last visited location. `"furthest"` will take learners to their furthest incomplete location. The furthest option will pair best in a course experience with linear progression.
+
 ##### \_showPrompt (boolean):
 Whether to show a prompt asking the user if they'd like to return to where they left off in their last visit or not. If set to `false` the user will be returned to where they left off automatically. The default is `true`.
+
+##### \_autoRestore (boolean):
+Controls whether the Bookmarking will automatically restore if the prompt is disabled. If not enabled, the user will be not be automatically returned to their bookmarked position. The default is `true`.
 
 ##### title (string):
 Text that appears as the header of the prompt.
@@ -88,6 +94,17 @@ Set to `false` to disable bookmarking for the specified content object.
 
 ##### _level (string):
 Allows you to override the **\_level** setting defined in *course.json* with a setting specific to the contentObject. The same values are allowed here, along with an additional setting of `"inherit"` - though this setting is really intended for use by the Adapt Authoring Tool. If building directly in the Framework you can simply not include this property at contentObject level to achieve the same effect as a setting of `"inherit"`.
+
+<div float align=right><a href="#top">Back to Top</a></div>
+
+## Unique Element Tags
+The bookmarking plug-in allows you to place a button in any compiled json field (e.g. attribute, displayTitle, body, instruction, etc). This button will route learners to their previous or furthest location. Additionally, you may use attributes to alter the default labels in course.json.
+```json
+{
+  "body": "<bookmarking />",
+  "body": "<bookmarking label='Resume' aria-label='Navigate to your furthest point of progress.' location='furthest' />",
+}
+```
 
 <div float align=right><a href="#top">Back to Top</a></div>
 
