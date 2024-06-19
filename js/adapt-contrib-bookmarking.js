@@ -202,8 +202,9 @@ class Bookmarking extends Backbone.Controller {
 
   navigateTo(location = this.location) {
     const id = this.getLocationId(location);
+    if (['', undefined, 'current'].includes(id)) return;
     const target = this.resolveLocking(id);
-    if (['', undefined, 'current'].includes(target)) return;
+    if (!target) return;
     _.defer(async () => {
       try {
 
