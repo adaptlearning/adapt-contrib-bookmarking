@@ -176,36 +176,29 @@ class Bookmarking extends Backbone.Controller {
    * @param {string} id the bookmarked location
    * @returns the identifier of the location to return the user
    */
-  getAppropriateReturnPath(id) {
+  resolveLocking(id) {
     const model = data.findById(id);
-    let target = id;
 
-    if (model.isTypeGroup('course')) return target;
+    const isCourse = model.isTypeGroup('course');
+    if (isCourse) return id;
 
-    if (model.isTypeGroup('contentobject')) {
-      const descendants = Adapt.course.getAllDescendantModels(true).filter(i => i.isTypeGroup('contentobject'));
-      const precedingModels = descendants.slice(0, descendants.indexOf(model));
-      const isPrecededByLockedContent = precedingModels.some(i => i.get('_isLocked'));
+    const isContentObject = model.isTypeGroup('contentobject');
+    // do not allow navigation to a locked page/menu
+    const isLockedContentObject = isContentObject && model.get('_isLocked')
 
-      if (isPrecededByLockedContent || model.get('_isLocked')) {
-        // do not allow navigation to a locked page/menu
-        const nearestUnlockedIndex = precedingModels.reverse().findIndex(i => !i.get('_isLocked'));
-        target = precedingModels[nearestUnlockedIndex].get('_id');
-      }
+    // bookmark is by contentobject or article/block/component
+    const descendants = isContentObject
+      ? Adapt.course.getAllDescendantModels(true).filter(descendant => descendant.isTypeGroup('contentobject'))
+      : model.findAncestor('page').getAllDescendantModels(true);
+    
+    const precedingModels = descendants.slice(0, descendants.indexOf(model));
+    const isPrecededByLockedContent = precedingModels.some(precedingModel => precedingModel.get('_isLocked'));
+    
+    if (!isPrecededByLockedContent && !isLockedContentObject) return id;
 
-    } else {
-      // bookmark is article/block/component
-      const descendants = model.findAncestor('pages').getAllDescendantModels(true);
-      const precedingModels = descendants.slice(0, descendants.indexOf(model));
-      const isPrecededByLockedContent = precedingModels.some(i => i.get('_isLocked'));
-
-      if (isPrecededByLockedContent) {
-        const nearestUnlockedIndex = precedingModels.reverse().findIndex(i => !i.get('_isLocked'));
-        target = precedingModels[nearestUnlockedIndex + 1].get('_id');
-      }
-    }
-
-    return target;
+    const offset = isContentObject ? 0 : 1;
+    const nearestUnlockedIndex = precedingModels.reverse().findIndex(precedingModel => !precedingModel.get('_isLocked'));
+    return precedingModels[nearestUnlockedIndex + offset].get('_id');
   }
 
   navigateTo(location = this.location) {
