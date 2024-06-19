@@ -88,8 +88,8 @@ class Bookmarking extends Backbone.Controller {
       resumeButtonAriaLabel
     } = this.globals._extensions._bookmarking;
     const $target = $(event.target);
-    const label = $target.attr('label') || $target.html() || resumeButtonText  || null;
-    const ariaLabel =  $target.attr('aria-label') || resumeButtonAriaLabel || null;
+    const label = $target.attr('label') || $target.html() || resumeButtonText || null;
+    const ariaLabel = $target.attr('aria-label') || resumeButtonAriaLabel || null;
     const _location = $target.attr('location') || this.location;
     const id = this.getLocationId(_location);
     const isDisabled = ['', undefined, 'current'].includes(id);
@@ -171,13 +171,52 @@ class Bookmarking extends Backbone.Controller {
     });
   }
 
+  /**
+   * If the bookmark is preceded by locked content then find the nearest appropriate location
+   * @param {string} id the bookmarked location
+   * @returns the identifier of the location to return the user
+   */
+  getAppropriateReturnPath(id) {
+    const model = data.findById(id);
+    let target = id;
+
+    if (model.isTypeGroup('course')) return target;
+
+    if (model.isTypeGroup('contentobject')) {
+      const descendants = Adapt.course.getAllDescendantModels(true).filter(i => i.isTypeGroup('contentobject'));
+      const precedingModels = descendants.slice(0, descendants.indexOf(model));
+      const isPrecededByLockedContent = precedingModels.some(i => i.get('_isLocked'));
+
+      if (isPrecededByLockedContent || model.get('_isLocked')) {
+        // do not allow navigation to a locked page/menu
+        const nearestUnlockedIndex = precedingModels.reverse().findIndex(i => !i.get('_isLocked'));
+        target = precedingModels[nearestUnlockedIndex].get('_id');
+      }
+
+    } else {
+      // bookmark is article/block/component
+      const descendants = model.findAncestor('pages').getAllDescendantModels(true);
+      const precedingModels = descendants.slice(0, descendants.indexOf(model));
+      const isPrecededByLockedContent = precedingModels.some(i => i.get('_isLocked'));
+
+      if (isPrecededByLockedContent) {
+        const nearestUnlockedIndex = precedingModels.reverse().findIndex(i => !i.get('_isLocked'));
+        target = precedingModels[nearestUnlockedIndex + 1].get('_id');
+      }
+    }
+
+    return target;
+  }
+
   navigateTo(location = this.location) {
     const id = this.getLocationId(location);
     if (['', undefined, 'current'].includes(id)) return;
     _.defer(async () => {
       try {
+        const target = this.getAppropriateReturnPath(id);
+
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
-        await router.navigateToElement(id, { trigger: true, replace: isSinglePage, duration: 400 });
+        await router.navigateToElement(target, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
         logging.warn(`Bookmarking cannot navigate to id: ${id}\n`, err);
       }
