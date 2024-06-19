@@ -206,7 +206,7 @@ class Bookmarking extends Backbone.Controller {
     if (['', undefined, 'current'].includes(id)) return;
     _.defer(async () => {
       try {
-        const target = this.getAppropriateReturnPath(id);
+        const target = this.resolveLocking(id);
 
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
         await router.navigateToElement(target, { trigger: true, replace: isSinglePage, duration: 400 });
