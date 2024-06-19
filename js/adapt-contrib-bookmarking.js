@@ -184,33 +184,33 @@ class Bookmarking extends Backbone.Controller {
 
     const isContentObject = model.isTypeGroup('contentobject');
     // do not allow navigation to a locked page/menu
-    const isLockedContentObject = isContentObject && model.get('_isLocked')
+    const isLockedContentObject = isContentObject && model.get('_isLocked');
 
     // bookmark is by contentobject or article/block/component
     const descendants = isContentObject
       ? Adapt.course.getAllDescendantModels(true).filter(descendant => descendant.isTypeGroup('contentobject'))
       : model.findAncestor('page').getAllDescendantModels(true);
-    
+
     const precedingModels = descendants.slice(0, descendants.indexOf(model));
     const isPrecededByLockedContent = precedingModels.some(precedingModel => precedingModel.get('_isLocked'));
-    
+
     if (!isPrecededByLockedContent && !isLockedContentObject) return id;
 
     const nearestUnlockedIndex = precedingModels.reverse().findIndex(precedingModel => !precedingModel.get('_isLocked'));
-    return precedingModels[nearestUnlockedIndex].get('_id');
+    return precedingModels[nearestUnlockedIndex]?.get('_id');
   }
 
   navigateTo(location = this.location) {
     const id = this.getLocationId(location);
-    if (['', undefined, 'current'].includes(id)) return;
+    const target = this.resolveLocking(id);
+    if (['', undefined, 'current'].includes(target)) return;
     _.defer(async () => {
       try {
-        const target = this.resolveLocking(id);
 
         const isSinglePage = (Adapt.contentObjects.models.length === 1);
         await router.navigateToElement(target, { trigger: true, replace: isSinglePage, duration: 400 });
       } catch (err) {
-        logging.warn(`Bookmarking cannot navigate to id: ${id}\n`, err);
+        logging.warn(`Bookmarking cannot navigate to id: ${target}\n`, err);
       }
     });
     this.stopListening(Adapt, 'bookmarking:cancel');
