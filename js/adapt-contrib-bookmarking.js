@@ -196,9 +196,8 @@ class Bookmarking extends Backbone.Controller {
     
     if (!isPrecededByLockedContent && !isLockedContentObject) return id;
 
-    const offset = isContentObject ? 0 : 1;
     const nearestUnlockedIndex = precedingModels.reverse().findIndex(precedingModel => !precedingModel.get('_isLocked'));
-    return precedingModels[nearestUnlockedIndex + offset].get('_id');
+    return precedingModels[nearestUnlockedIndex].get('_id');
   }
 
   navigateTo(location = this.location) {
