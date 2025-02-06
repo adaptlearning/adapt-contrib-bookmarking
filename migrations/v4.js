@@ -1,12 +1,9 @@
 import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import _ from 'lodash';
 
 const getCourse = content => {
-  const [course] = content.filter(({ _type }) => _type === 'course');
+  const course = content.find(({ _type }) => _type === 'course');
   return course;
-};
-
-const getGlobals = content => {
-  return getCourse(content)?._globals?._extensions?._bookmarking;
 };
 
 describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
@@ -26,37 +23,52 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
   });
 
   mutateContent('Bookmarking - add globals if missing', async (content) => {
-    courseBookmarkingGlobals = getGlobals(content);
-    if (courseBookmarkingGlobals) return true;
-    course._globals._extensions = course._globals._extensions || {};
-    courseBookmarkingGlobals = course._globals._extensions._bookmarking = {};
+    if (!_.has(course, '_globals._extensions._bookmarking')) _.set(course, '_globals._extensions._bookmarking', {});
+    courseBookmarkingGlobals = course._globals._extensions._bookmarking;
     return true;
   });
-  mutateContent('Bookmarking - add new globals', async (content) => {
+
+  mutateContent('Bookmarking - add global attribute resumeButtonText', async (content) => {
     courseBookmarkingGlobals.resumeButtonText = resumeButtonText;
+    return true;
+  });
+
+  mutateContent('Bookmarking - add global attribute resumeButtonAriaLabel', async (content) => {
     courseBookmarkingGlobals.resumeButtonAriaLabel = resumeButtonAriaLabel;
     return true;
   });
-  mutateContent('Bookmarking - add _location', async (content) => {
+
+  mutateContent('Bookmarking - add course _location', async (content) => {
     course._bookmarking._location = location;
     return true;
   });
-  mutateContent('Bookmarking - add _autoRestore', async (content) => {
+
+  mutateContent('Bookmarking - add course _autoRestore', async (content) => {
     course._bookmarking._autoRestore = true;
     return true;
   });
 
-  checkContent('Bookmarking - check new globals', async (content) => {
-    return (
-      courseBookmarkingGlobals.resumeButtonText === resumeButtonText &&
-      courseBookmarkingGlobals.resumeButtonAriaLabel === resumeButtonAriaLabel
-    );
+  checkContent('Bookmarking - check global attribute resumeButtonText', async (content) => {
+    const isValid = courseBookmarkingGlobals.resumeButtonText === resumeButtonText;
+    if (!isValid) throw new Error('Bookmarking - global attribute resumeButtonText');
+    return true;
   });
-  checkContent('Bookmarking - check _location', async (content) => {
-    return course._bookmarking._location === location;
+
+  checkContent('Bookmarking - check global attribute resumeButtonAriaLabel', async (content) => {
+    const isValid = courseBookmarkingGlobals.resumeButtonAriaLabel === resumeButtonAriaLabel;
+    if (!isValid) throw new Error('Bookmarking - global attribute resumeButtonAriaLabel');
+    return true;
   });
-  checkContent('Bookmarking - check _autoRestore', async (content) => {
-    return course._bookmarking._autoRestore === true;
+
+  checkContent('Bookmarking - check course attribute _location', async (content) => {
+    const isValid = course._bookmarking._location === location;
+    if (!isValid) throw new Error('Bookmarking - course attribute _location');
+    return true;
+  });
+  checkContent('Bookmarking - check course attribute _autoRestore', async (content) => {
+    const isValid = course._bookmarking._autoRestore === true;
+    if (!isValid) throw new Error('Bookmarking - course attribute _autoRestore');
+    return true;
   });
 
   updatePlugin('Bookmarking - update to v4.3.0', { name: 'adapt-contrib-bookmarking', version: '4.3.0', framework: '>=5.31.11' });
