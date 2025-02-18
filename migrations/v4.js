@@ -1,10 +1,5 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
 import _ from 'lodash';
-
-const getCourse = content => {
-  const course = content.find(({ _type }) => _type === 'course');
-  return course;
-};
 
 describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
 
@@ -18,7 +13,7 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
   whereFromPlugin('Bookmarking - from v4.2.1', { name: 'adapt-contrib-bookmarking', version: '<4.3.0' });
 
   whereContent('Bookmarking - where config is present', async (content) => {
-    course = getCourse(content);
+    course = getCourse();
     return course._bookmarking;
   });
 

@@ -1,9 +1,4 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
-
-const getCourse = content => {
-  const course = content.find(({ _type }) => _type === 'course');
-  return course;
-};
+import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
 
 describe('Bookmarking - v2.1.1 to v2.1.2', async () => {
 
@@ -15,7 +10,7 @@ describe('Bookmarking - v2.1.1 to v2.1.2', async () => {
   whereFromPlugin('Bookmarking - from v2.1.1', { name: 'adapt-contrib-bookmarking', version: '<2.1.2' });
 
   whereContent('Bookmarking - where config is present', async (content) => {
-    course = getCourse(content);
+    course = getCourse();
     return course._bookmarking;
   });
 
@@ -43,7 +38,7 @@ describe('Bookmarking - v2.1.2 to v2.1.3', async () => {
   whereFromPlugin('Bookmarking - from v2.1.2', { name: 'adapt-contrib-bookmarking', version: '<2.1.3' });
 
   whereContent('Bookmarking - where config is present', async (content) => {
-    course = getCourse(content);
+    course = getCourse();
     return course._bookmarking;
   });
 
