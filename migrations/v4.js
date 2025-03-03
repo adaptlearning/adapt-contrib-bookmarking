@@ -68,10 +68,17 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
 
   updatePlugin('Bookmarking - update to v4.3.0', { name: 'adapt-contrib-bookmarking', version: '4.3.0', framework: '>=5.31.11' });
 
-  testSuccessWhere('bookmarking with course._bookmarking', {
+  testSuccessWhere('bookmarking with course._bookmarking, no globals', {
     fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.2.1' }],
     content: [
       { _type: 'course', _bookmarking: {} }
+    ]
+  });
+
+  testSuccessWhere('bookmarking with course._bookmarking, with globals', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.2.1' }],
+    content: [
+      { _type: 'course', _bookmarking: {}, _globals: { _extensions: { _bookmarking: {} } } }
     ]
   });
 
@@ -82,7 +89,7 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
     ]
   });
 
-  testStopWhere('incorrect version', {
+  testStopWhere('bookmarking incorrect version', {
     fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.3.0' }]
   });
 });

@@ -42,7 +42,7 @@ describe('Bookmarking - v2.1.1 to v2.1.2', async () => {
     ]
   });
 
-  testStopWhere('incorrect version', {
+  testStopWhere('bookmarking incorrect version', {
     fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.2' }]
   });
 });
@@ -87,7 +87,7 @@ describe('Bookmarking - v2.1.2 to v2.1.3', async () => {
     ]
   });
 
-  testStopWhere('incorrect version', {
+  testStopWhere('bookmarking incorrect version', {
     fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.3' }]
   });
 });
