@@ -1,4 +1,4 @@
-import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 
 describe('Bookmarking - v2.1.1 to v2.1.2', async () => {
 
@@ -27,6 +27,24 @@ describe('Bookmarking - v2.1.1 to v2.1.2', async () => {
   });
 
   updatePlugin('Bookmarking - update to v2.1.2', { name: 'adapt-contrib-bookmarking', version: '2.1.2', framework: '>=2.2.0' });
+
+  testSuccessWhere('bookmarking with course._bookmarking', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.1' }],
+    content: [
+      { _type: 'course', _bookmarking: {} }
+    ]
+  });
+
+  testStopWhere('bookmarking with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.1' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.2' }]
+  });
 });
 
 describe('Bookmarking - v2.1.2 to v2.1.3', async () => {
@@ -54,4 +72,22 @@ describe('Bookmarking - v2.1.2 to v2.1.3', async () => {
   });
 
   updatePlugin('Bookmarking - update to v2.1.3', { name: 'adapt-contrib-bookmarking', version: '2.1.3', framework: '>=2.2.0' });
+
+  testSuccessWhere('bookmarking with course._bookmarking', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.2' }],
+    content: [
+      { _type: 'course', _bookmarking: {} }
+    ]
+  });
+
+  testStopWhere('bookmarking with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.2' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '2.1.3' }]
+  });
 });

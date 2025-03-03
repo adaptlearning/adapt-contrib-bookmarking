@@ -1,4 +1,4 @@
-import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
@@ -67,4 +67,22 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
   });
 
   updatePlugin('Bookmarking - update to v4.3.0', { name: 'adapt-contrib-bookmarking', version: '4.3.0', framework: '>=5.31.11' });
+
+  testSuccessWhere('bookmarking with course._bookmarking', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.2.1' }],
+    content: [
+      { _type: 'course', _bookmarking: {} }
+    ]
+  });
+
+  testStopWhere('bookmarking with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.2.1' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-bookmarking', version: '4.3.0' }]
+  });
 });
