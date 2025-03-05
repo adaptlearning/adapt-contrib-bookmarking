@@ -60,6 +60,7 @@ describe('Bookmarking - v4.2.1 to v4.3.0', async () => {
     if (!isValid) throw new Error('Bookmarking - course attribute _location');
     return true;
   });
+
   checkContent('Bookmarking - check course attribute _autoRestore', async (content) => {
     const isValid = course._bookmarking._autoRestore === true;
     if (!isValid) throw new Error('Bookmarking - course attribute _autoRestore');
